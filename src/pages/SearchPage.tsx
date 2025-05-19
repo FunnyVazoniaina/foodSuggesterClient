@@ -180,7 +180,7 @@ const SearchPage: React.FC = () => {
             mb: 2
           }}
         >
-          <RestaurantIcon sx={{ mr: 1, color: primaryColor }} />
+        
           Quels ingrédients avez-vous ?
         </Typography>
         
@@ -214,7 +214,7 @@ const SearchPage: React.FC = () => {
                   ...params.InputProps,
                   startAdornment: (
                     <InputAdornment position="start">
-                      <RestaurantIcon sx={{ color: alpha(textColor, 0.6) }} />
+                      
                     </InputAdornment>
                   )
                 }}

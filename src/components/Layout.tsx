@@ -28,6 +28,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import HistoryIcon from '@mui/icons-material/History';
 
 interface LayoutProps {
   children: ReactNode;
@@ -52,6 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const menuItems = [
     { text: 'Accueil', icon: <HomeIcon />, path: '/' },
     { text: 'Recherche', icon: <RestaurantIcon />, path: '/search' },
+    { text: 'Historique', icon: <HistoryIcon />, path: '/history' },
     { text: 'Favoris', icon: <FavoriteIcon />, path: '/favorites' },
     { text: 'Profil', icon: <AccountCircleIcon />, path: '/profile' },
   ];
@@ -66,10 +68,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: backgroundColor }}>
       <AppBar 
-        position="static" 
+        position="fixed" // Changer "static" en "fixed"
         sx={{ 
-          bgcolor: appBarColor,
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+        bgcolor: appBarColor,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+        zIndex: (theme) => theme.zIndex.drawer + 1 // Assure que l'AppBar est au-dessus du Drawer
         }}
       >
         <Toolbar>

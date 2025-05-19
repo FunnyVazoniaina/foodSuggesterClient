@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardMedia, CardContent, Typography, CardActions, IconButton, Tooltip, Box } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { recipeService } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 interface RecipeCardProps {
   recipe: {
@@ -12,6 +13,7 @@ interface RecipeCardProps {
     missedIngredientCount: number;
     likes?: number;
     isFavorite?: boolean;
+    sourceUrl?: string; // URL de la recette originale
   };
   onFavoriteToggle?: () => void;
   showFavoriteButton?: boolean;
@@ -22,6 +24,8 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   onFavoriteToggle,
   showFavoriteButton = true
 }) => {
+  const navigate = useNavigate();
+
   const handleFavoriteClick = async () => {
     try {
       if (recipe.isFavorite) {
@@ -35,6 +39,19 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
     } catch (error) {
       console.error('Error toggling favorite', error);
     }
+  };
+
+  const handleViewRecipe = () => {
+    // Option 1: Rediriger vers une page de détails interne
+    navigate(`/recipe/${recipe.id}`);
+    
+    // Option 2: Ouvrir l'URL source de la recette dans un nouvel onglet
+    // if (recipe.sourceUrl) {
+    //   window.open(recipe.sourceUrl, '_blank');
+    // } else {
+    //   // Fallback si l'URL source n'est pas disponible
+    //   navigate(`/recipe/${recipe.id}`);
+    // }
   };
 
   return (
@@ -86,7 +103,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
           </Tooltip>
         )}
         <Tooltip title="Voir la recette">
-          <IconButton aria-label="view recipe">
+          <IconButton aria-label="view recipe" onClick={handleViewRecipe}>
             <Icon icon="mdi:book-open-variant" width="24" height="24" />
           </IconButton>
         </Tooltip>

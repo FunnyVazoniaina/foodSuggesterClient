@@ -12,6 +12,7 @@ const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
 
 // Création du thème
 const theme = createTheme({
@@ -107,6 +108,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/history" 
+                element={
+                  <ProtectedRoute>
+                    <HistoryPage />
                   </ProtectedRoute>
                 } 
               />

@@ -29,8 +29,8 @@ const HomePage: React.FC = () => {
   // Palette de couleurs améliorée - jaune foncé remplacé
   const primaryColor = '#FF6B35'; // Orange chaleureux (conservé)
   const secondaryColor = '#A0522D'; // Marron (pour la barre de navigation)
-  const accentColor = '#E8F5E9'; // Vert menthe très clair (remplace le jaune)
-  const lightAccent = '#F1F8E9'; // Vert encore plus clair
+ const accentColor = '#FFF0E5'; // Pêche très clair
+const lightAccent = '#FFF5EB'; // Crème/beige très clair
   const textColor = '#4A4238'; // Brun foncé pour le texte
   const cardBgColor = '#FFFCF7'; // Beige très clair pour les cartes
   const buttonHoverColor = '#E85826'; // Orange plus foncé pour les survols
