@@ -142,5 +142,19 @@ export const historyService = {
   }
 };
 
+// Services utilisateur
+export const userService = {
+  // Récupérer le profil de l'utilisateur
+  getProfile: async () => {
+    const response = await api.get('/user/profile');
+    return response.data;
+  },
+  
+  // Mettre à jour le profil de l'utilisateur
+  updateProfile: async (data: { name?: string; email?: string; password?: string }) => {
+    const response = await api.put('/user/profile', data);
+    return response.data;
+  }
+};
 
 export default api;
