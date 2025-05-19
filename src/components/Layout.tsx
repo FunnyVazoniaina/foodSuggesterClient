@@ -101,7 +101,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               alignItems: 'center'
             }}
           >
-            <RestaurantMenuIcon sx={{ mr: 1 }} />
+            
             Food Suggester
           </Typography>
           {isAuthenticated ? (

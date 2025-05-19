@@ -26,8 +26,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
 import EmailIcon from '@mui/icons-material/Email';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import HistoryIcon from '@mui/icons-material/History';
-import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
@@ -42,20 +40,14 @@ interface User {
   created_at: string;
 }
 
-interface SearchHistoryItem {
-  id: number;
-  ingredients: string;
-  created_at: string;
-}
-
 const ProfilePage: React.FC = () => {
   const { logout } = useContext(AuthContext);
   const [user, setUser] = useState<User | null>(null);
-  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [updateError, setUpdateError] = useState('');
@@ -77,10 +69,7 @@ const ProfilePage: React.FC = () => {
         const userResponse = await api.get('/user/profile');
         setUser(userResponse.data);
         setName(userResponse.data.name);
-
-        // Récupérer l'historique de recherche
-        const historyResponse = await api.get('/user/search-history');
-        setSearchHistory(historyResponse.data);
+        setEmail(userResponse.data.email);
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError('Une erreur est survenue lors de la récupération de vos données');
@@ -98,6 +87,11 @@ const ProfilePage: React.FC = () => {
     setConfirmPassword('');
     setUpdateError('');
     setUpdateSuccess('');
+    // Réinitialiser les champs avec les valeurs actuelles
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
   };
 
   const handleCloseEditDialog = () => {
@@ -115,8 +109,9 @@ const ProfilePage: React.FC = () => {
       }
 
       // Préparer les données à mettre à jour
-      const updateData: { name?: string; password?: string } = {};
+      const updateData: { name?: string; email?: string; password?: string } = {};
       if (name !== user?.name) updateData.name = name;
+      if (email !== user?.email) updateData.email = email;
       if (password) updateData.password = password;
 
       // Si aucune donnée à mettre à jour
@@ -129,8 +124,12 @@ const ProfilePage: React.FC = () => {
       await api.put('/user/profile', updateData);
       
       // Mettre à jour les données locales
-      if (updateData.name) {
-        setUser(prev => prev ? { ...prev, name: updateData.name! } : null);
+      if (updateData.name || updateData.email) {
+        setUser(prev => prev ? { 
+          ...prev, 
+          name: updateData.name || prev.name,
+          email: updateData.email || prev.email
+        } : null);
       }
       
       setUpdateSuccess('Profil mis à jour avec succès');
@@ -188,7 +187,7 @@ const ProfilePage: React.FC = () => {
             fontFamily: '"Poppins", sans-serif'
           }}
         >
-          Gérez vos informations personnelles et consultez votre historique de recherche.
+          Gérez vos informations personnelles.
         </Typography>
         
         <Divider sx={{ mb: 4 }} />
@@ -231,8 +230,8 @@ const ProfilePage: React.FC = () => {
           </Typography>
         </Box>
       ) : user ? (
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={4}>
+        <Grid container spacing={4} justifyContent="center">
+          <Grid item xs={12} md={6}>
             <Paper 
               elevation={3} 
               sx={{ 
@@ -240,7 +239,7 @@ const ProfilePage: React.FC = () => {
                 borderRadius: 3,
                 bgcolor: '#fff',
                 height: '100%',
-                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
               }}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, flexDirection: 'column' }}>
@@ -254,7 +253,7 @@ const ProfilePage: React.FC = () => {
                     boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)'
                   }}
                 >
-                  {user.name.charAt(0).toUpperCase()}
+                  {user?.name ? user.name.charAt(0).toUpperCase() : ''}
                 </Avatar>
                 <Typography 
                   variant="h5"
@@ -341,120 +340,6 @@ const ProfilePage: React.FC = () => {
               </Button>
             </Paper>
           </Grid>
-
-          <Grid item xs={12} md={8}>
-            <Paper 
-              elevation={3} 
-              sx={{ 
-                p: 3, 
-                borderRadius: 3,
-                bgcolor: '#fff',
-                height: '100%',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)'
-              }}
-            >
-              <Typography 
-                variant="h6" 
-                gutterBottom
-                sx={{ 
-                  fontFamily: '"Poppins", sans-serif',
-                  fontWeight: 600,
-                  color: textColor,
-                  display: 'flex',
-                  alignItems: 'center',
-                  mb: 3
-                }}
-              >
-                <HistoryIcon sx={{ mr: 1, color: primaryColor }} />
-                Historique de recherche
-              </Typography>
-              
-              {searchHistory.length > 0 ? (
-                <List>
-                  {searchHistory.map((item, index) => (
-                    <React.Fragment key={item.id}>
-                      <ListItem 
-                        sx={{ 
-                          px: 2, 
-                          py: 1.5, 
-                          borderRadius: 2,
-                          '&:hover': {
-                            bgcolor: alpha(backgroundColor, 0.7)
-                          }
-                        }}
-                      >
-                        <ListItemText 
-                          primary={
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <SearchIcon sx={{ mr: 1, color: primaryColor, fontSize: 20 }} />
-                              <Typography 
-                                variant="body1"
-                                sx={{ 
-                                  fontFamily: '"Poppins", sans-serif',
-                                  color: textColor,
-                                  fontWeight: 500
-                                }}
-                              >
-                                {item.ingredients.split(',').join(', ')}
-                              </Typography>
-                            </Box>
-                          } 
-                          secondary={
-                            <Typography 
-                              variant="body2" 
-                              sx={{ 
-                                color: alpha(textColor, 0.6),
-                                fontFamily: '"Poppins", sans-serif',
-                                mt: 0.5,
-                                fontSize: '0.8rem'
-                              }}
-                            >
-                              {formatDate(item.created_at)}
-                            </Typography>
-                          }
-                        />
-                      </ListItem>
-                      {index < searchHistory.length - 1 && <Divider variant="middle" sx={{ my: 1 }} />}
-                    </React.Fragment>
-                  ))}
-                </List>
-              ) : (
-                <Box 
-                  sx={{ 
-                    textAlign: 'center', 
-                    py: 6,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                  }}
-                >
-                  <HistoryIcon sx={{ fontSize: 60, color: alpha(textColor, 0.3), mb: 2 }} />
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
-                      color: alpha(textColor, 0.7),
-                      fontFamily: '"Poppins", sans-serif',
-                      fontWeight: 500,
-                      mb: 1
-                    }}
-                  >
-                    Aucun historique de recherche
-                  </Typography>
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      color: alpha(textColor, 0.6),
-                      fontFamily: '"Poppins", sans-serif',
-                      maxWidth: 400,
-                      mx: 'auto'
-                    }}
-                  >
-                    Vos recherches de recettes apparaîtront ici.
-                  </Typography>
-                </Box>
-              )}
-            </Paper>
-          </Grid>
         </Grid>
       ) : null}
 
@@ -539,6 +424,34 @@ const ProfilePage: React.FC = () => {
           />
           <TextField
             margin="dense"
+            label="Email"
+            type="email"
+            fullWidth
+            variant="outlined"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            sx={{ 
+              mb: 2,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                '&.Mui-focused fieldset': {
+                  borderColor: primaryColor,
+                },
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: primaryColor,
+              }
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <EmailIcon sx={{ color: alpha(textColor, 0.6) }} />
+                </InputAdornment>
+              )
+            }}
+          />
+          <TextField
+            margin="dense"
             label="Nouveau mot de passe"
             type={showPassword ? 'text' : 'password'}
             fullWidth
@@ -566,7 +479,7 @@ const ProfilePage: React.FC = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label="toggle password visibility"
+                                        aria-label="toggle password visibility"
                     onClick={() => setShowPassword(!showPassword)}
                     edge="end"
                   >
