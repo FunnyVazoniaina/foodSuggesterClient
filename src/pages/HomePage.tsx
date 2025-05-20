@@ -140,29 +140,34 @@ const lightAccent = '#FFF5EB'; // Crème/beige très clair
           </Typography>
           
           <Button 
-            variant="contained" 
+            variant="outlined" // Changé de "contained" à "outlined"
             size="large" 
             onClick={() => navigate('/search')}
-            startIcon={<SearchIcon />}
+            startIcon={<SearchIcon sx={{ color: primaryColor }} />} // Couleur de l'icône
             sx={{ 
               mt: 2,
               py: 1.5,
               px: 4,
-              bgcolor: primaryColor,
+              bgcolor: 'transparent', // Fond transparent
+              color: primaryColor, // Texte en orange
+              borderColor: primaryColor, // Bordure orange
+              borderWidth: 2, // Bordure plus épaisse
               borderRadius: 2,
               textTransform: 'none',
               fontFamily: '"Poppins", sans-serif',
               fontWeight: 600,
               fontSize: '1.1rem',
-              boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)',
+              boxShadow: 'none', // Pas d'ombre
               '&:hover': {
-                bgcolor: buttonHoverColor,
-                boxShadow: '0 6px 15px rgba(255, 107, 53, 0.4)',
+                bgcolor: alpha(primaryColor, 0.05), // Légère teinte orange au survol
+                borderColor: buttonHoverColor, // Bordure plus foncée au survol
+                color: buttonHoverColor, // Texte plus foncé au survol
               }
             }}
           >
             Commencer à chercher
           </Button>
+
         </Container>
       </Box>
 
@@ -337,54 +342,6 @@ const lightAccent = '#FFF5EB'; // Crème/beige très clair
         </Grid>
       </Box>
 
-      {/* Section CTA */}
-      <Paper 
-        elevation={0}
-        sx={{ 
-          p: 5, 
-          textAlign: 'center',
-          borderRadius: 3,
-          bgcolor: alpha(accentColor, 0.5),
-          border: `1px dashed ${alpha(primaryColor, 0.3)}`,
-          mb: 4
-        }}
-      >
-        <Typography 
-          variant="h5" 
-          component="h2"
-          sx={{ 
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 600,
-            color: textColor,
-            mb: 3
-          }}
-        >
-          Prêt à découvrir de nouvelles recettes ?
-        </Typography>
-        
-        <Button 
-          variant="contained" 
-          size="large" 
-          onClick={() => navigate('/search')}
-          startIcon={<SearchIcon />}
-          sx={{ 
-            py: 1.5,
-            px: 4,
-            bgcolor: primaryColor,
-            borderRadius: 2,
-            textTransform: 'none',
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 600,
-            boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)',
-            '&:hover': {
-              bgcolor: buttonHoverColor,
-              boxShadow: '0 6px 15px rgba(255, 107, 53, 0.4)',
-            }
-          }}
-        >
-          Commencer maintenant
-        </Button>
-      </Paper>
     </Layout>
   );
 };

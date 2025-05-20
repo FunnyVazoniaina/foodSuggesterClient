@@ -161,24 +161,9 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Layout>
+    
       <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          gutterBottom
-          sx={{ 
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 600,
-            color: textColor,
-            display: 'flex',
-            alignItems: 'center',
-            mb: 3
-          }}
-        >
-          <PersonIcon sx={{ mr: 1, color: primaryColor }} />
-          Mon profil
-        </Typography>
-        
+                
         <Typography 
           variant="body1" 
           sx={{ 

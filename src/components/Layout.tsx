@@ -277,7 +277,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             }}
           >
             <RestaurantMenuIcon fontSize="small" />
-            © {new Date().getFullYear()} Food Suggester
+            © {new Date().getFullYear()} Food Suggester - FunnyVazoniaina
           </Typography>
         </Container>
       </Box>
