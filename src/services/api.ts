@@ -61,8 +61,8 @@ export const authService = {
 export const recipeService = {
   suggestRecipes: async (ingredients: string) => {
     try {
-      // Utilisation de params pour une meilleure gestion des paramètres d'URL
-      const response = await api.get('/recipes/suggest', {
+      // Modification de l'endpoint pour utiliser suggest-with-details
+      const response = await api.get('/recipes/suggest-with-details', {
         params: { ingredients }
       });
       return response.data;
@@ -82,6 +82,7 @@ export const recipeService = {
     return api.delete(`/user/favorites/${recipeId}`);
   }
 };
+
 
 // Service pour l'historique des recherches
 export const historyService = {
