@@ -1,54 +1,75 @@
-# React + TypeScript + Vite
+# Food Suggester - Générateur de recettes à partir d'ingrédients
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Food Suggester est une application web développée avec ReactJS qui permet aux utilisateurs de générer automatiquement des idées de recettes en saisissant les ingrédients disponibles. Elle utilise l’API Spoonacular pour obtenir des suggestions de plats variés, simples et rapides à préparer.
 
-Currently, two official plugins are available:
+## Fonctionnalités principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Recherche de recettes par liste d'ingrédients
+- Affichage des recettes avec image, titre et ingrédients manquants
+- Détails d'une recette : instructions, temps de cuisson, etc.
+- Ajout des recettes préférées aux favoris
+- Interface moderne, ergonomique et responsive
 
-## Expanding the ESLint configuration
+## Technologies utilisées
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- ReactJS
+- Vite
+- Spoonacular API
+- CSS pur (ou TailwindCSS si utilisé)
+- Axios pour les requêtes HTTP
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Installation et lancement du projet
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. Cloner le dépôt
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+git clone https://github.com/votre-utilisateur/food-suggester-frontend.git
+cd food-suggester-frontend
+2. Installer les dépendances
+bash
+Copy
+Edit
+npm install
+# ou
+pnpm install
+3. Configurer l’environnement
+Créer un fichier .env à la racine du projet avec le contenu suivant :
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+env
+Copy
+Edit
+VITE_SPOONACULAR_API_KEY=VOTRE_CLE_API_ICI
+Vous pouvez obtenir une clé gratuite sur : https://spoonacular.com/food-api
+
+4. Lancer l'application
+bash
+Copy
+Edit
+npm run dev
+# ou
+pnpm run dev
+L’application sera accessible à l’adresse : http://localhost:5173
+
+Utilisation
+Entrer une liste d'ingrédients (ex. : tomate, oignon, œuf)
+
+Visualiser une liste de recettes correspondantes
+
+Cliquer sur une recette pour consulter les détails
+
+Ajouter la recette aux favoris si souhaité
+
+Fonctionnalités futures
+Authentification utilisateur
+
+Historique de recherche
+
+Notation des recettes
+
+Ajout manuel de recettes personnalisées
+
+Support multilingue
+
+Auteur
+Développé par Vazoniaina
+Email : vazoniaina@proton.me
