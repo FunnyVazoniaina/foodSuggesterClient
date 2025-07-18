@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Assurez-vous que cette URL correspond exactement à l'URL de votre backend
 const API_URL = 'http://localhost:5000/api';
 
 const api = axios.create({
@@ -8,11 +7,9 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // Ajout de withCredentials pour gérer les cookies d'authentification si nécessaire
-  withCredentials: true
+  withCredentials: true //Allows cookies to be sent with requests
 });
 
-// Intercepteur pour ajouter le token à chaque requête
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -37,7 +34,6 @@ api.interceptors.response.use(
   }
 );
 
-// Services d'authentification
 export const authService = {
   login: async (email: string, password: string) => {
     const response = await api.post('/auth/login', { email, password });
@@ -61,7 +57,7 @@ export const authService = {
 export const recipeService = {
   suggestRecipes: async (ingredients: string) => {
     try {
-      // Modification de l'endpoint pour utiliser suggest-with-details
+
       const response = await api.get('/recipes/suggest-with-details', {
         params: { ingredients }
       });
@@ -83,10 +79,8 @@ export const recipeService = {
   }
 };
 
-
-// Service pour l'historique des recherches
 export const historyService = {
-  // Récupérer l'historique des recherches
+ 
   getSearchHistory: async () => {
     // Utilisez l'URL complète au lieu de '/api/recipes/history'
     const response = await fetch('http://localhost:5000/api/recipes/history', {
@@ -106,7 +100,6 @@ export const historyService = {
     return response.json();
   },
   
-  // Supprimer un élément de l'historique
   deleteHistoryItem: async (historyId: number) => {
     const response = await fetch(`/api/recipes/history/${historyId}`, {
       method: 'DELETE',
@@ -124,7 +117,6 @@ export const historyService = {
     return response.json();
   },
   
-  // Supprimer tout l'historique
   clearHistory: async () => {
     const response = await fetch('/api/recipes/history', {
       method: 'DELETE',
@@ -143,16 +135,14 @@ export const historyService = {
   }
 };
 
-// Services utilisateur
 export const userService = {
-  // Récupérer le profil de l'utilisateur
+  
   getProfile: async () => {
     const response = await api.get('/user/profile');
     return response.data;
   },
   
-  // Mettre à jour le profil de l'utilisateur
-  updateProfile: async (data: { name?: string; email?: string; password?: string }) => {
+    updateProfile: async (data: { name?: string; email?: string; password?: string }) => {
     const response = await api.put('/user/profile', data);
     return response.data;
   }
