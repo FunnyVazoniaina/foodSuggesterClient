@@ -10,7 +10,8 @@ import {
   InputAdornment,
   IconButton,
   useTheme,
-  alpha
+  alpha,
+  Divider
 } from '@mui/material';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -24,7 +25,7 @@ const LoginPage: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   
-  const { login } = useContext(AuthContext);
+  const { login, loginWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -60,6 +61,20 @@ const LoginPage: React.FC = () => {
     } catch (err: any) {
       console.error('Login error:', err);
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      await loginWithGoogle();
+      navigate('/');
+    } catch (err: any) {
+      console.error('Google login error:', err);
+      setError('Une erreur est survenue lors de la connexion avec Google');
     } finally {
       setLoading(false);
     }
@@ -143,6 +158,44 @@ const LoginPage: React.FC = () => {
             {success}
           </Alert>
         )}
+
+        {/* Bouton de connexion Google */}
+        <Button
+          fullWidth
+          variant="outlined"
+          onClick={handleGoogleLogin}
+          disabled={loading}
+          startIcon={<Icon icon="logos:google-icon" width="20" height="20" />}
+          sx={{ 
+            py: 1.2,
+            borderRadius: 2,
+            textTransform: 'none',
+            fontFamily: '"Poppins", sans-serif',
+            fontWeight: 500,
+            fontSize: '1rem',
+            mb: 2,
+            borderColor: '#DADCE0',
+            color: textColor,
+            '&:hover': {
+              borderColor: '#DADCE0',
+              bgcolor: alpha('#DADCE0', 0.1),
+            }
+          }}
+        >
+          {loading ? 'Connexion en cours...' : 'Se connecter avec Google'}
+        </Button>
+
+        <Divider sx={{ my: 2 }}>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: alpha(textColor, 0.6),
+              fontFamily: '"Poppins", sans-serif'
+            }}
+          >
+            ou
+          </Typography>
+        </Divider>
 
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
