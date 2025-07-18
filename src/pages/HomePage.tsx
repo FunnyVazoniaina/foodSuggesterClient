@@ -172,89 +172,90 @@ const lightAccent = '#FFF5EB'; // Crème/beige très clair
       </Box>
 
       {/* Section des fonctionnalités */}
-      <Box sx={{ mb: 8 }}>
-        <Typography 
-          variant="h4" 
-          component="h2" 
-          align="center"
+<Box sx={{ mb: 8 }}>
+  <Typography 
+    variant="h4" 
+    component="h2" 
+    align="center"
+    sx={{ 
+      fontFamily: '"Poppins", sans-serif',
+      fontWeight: 600,
+      color: textColor,
+      mb: 5
+    }}
+  >
+    Nos fonctionnalités
+  </Typography>
+  
+  <Grid container spacing={4}>
+    {features.map((feature, index) => (
+      <Grid item xs={12} sm={6} md={6} key={index}>
+        <Card 
+          elevation={2} 
           sx={{ 
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 600,
-            color: textColor,
-            mb: 5
+            height: '100%', 
+            display: 'flex', 
+            flexDirection: 'column',
+            borderRadius: 3,
+            transition: 'transform 0.3s, box-shadow 0.3s',
+            bgcolor: cardBgColor,
+            border: `1px solid ${alpha(primaryColor, 0.1)}`,
+            '&:hover': {
+              transform: 'translateY(-8px)',
+              boxShadow: `0 12px 20px ${alpha(primaryColor, 0.15)}`
+            }
           }}
         >
-          Nos fonctionnalités
-        </Typography>
-        
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Card 
-                elevation={2} 
-                sx={{ 
-                  height: '100%', 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  borderRadius: 3,
-                  transition: 'transform 0.3s, box-shadow 0.3s',
-                  bgcolor: cardBgColor,
-                  border: `1px solid ${alpha(primaryColor, 0.1)}`,
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: `0 12px 20px ${alpha(primaryColor, 0.15)}`
-                  }
-                }}
-              >
-                <CardContent sx={{ 
-                  p: 3, 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  flexGrow: 1
-                }}>
-                  <Box sx={{ 
-                    mb: 2, 
-                    p: 1.5, 
-                    borderRadius: '50%', 
-                    bgcolor: alpha(accentColor, 0.6),
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                  }}>
-                    {feature.icon}
-                  </Box>
-                  
-                  <Typography 
-                    variant="h6" 
-                    component="h3" 
-                    sx={{ 
-                      mb: 2,
-                      fontFamily: '"Poppins", sans-serif',
-                      fontWeight: 600,
-                      color: textColor
-                    }}
-                  >
-                    {feature.title}
-                  </Typography>
-                  
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
-                      color: alpha(textColor, 0.8),
-                      fontFamily: '"Poppins", sans-serif',
-                      lineHeight: 1.6
-                    }}
-                  >
-                    {feature.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+          <CardContent sx={{ 
+            p: 3, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center',
+            textAlign: 'center',
+            flexGrow: 1
+          }}>
+            <Box sx={{ 
+              mb: 2, 
+              p: 1.5, 
+              borderRadius: '50%', 
+              bgcolor: alpha(accentColor, 0.6),
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              {feature.icon}
+            </Box>
+            
+            <Typography 
+              variant="h6" 
+              component="h3" 
+              sx={{ 
+                mb: 2,
+                fontFamily: '"Poppins", sans-serif',
+                fontWeight: 600,
+                color: textColor
+              }}
+            >
+              {feature.title}
+            </Typography>
+            
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: alpha(textColor, 0.8),
+                fontFamily: '"Poppins", sans-serif',
+                lineHeight: 1.6
+              }}
+            >
+              {feature.description}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
+    ))}
+  </Grid>
+</Box>
+
 
       {/* Section "Comment ça marche" */}
       <Box 
