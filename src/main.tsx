@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import { registerSW } from 'virtual:pwa-register'
+import './index.css'
 
 // Enregistrement du service worker pour la PWA
 const updateSW = registerSW({
