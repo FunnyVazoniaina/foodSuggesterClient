@@ -1,34 +1,7 @@
-import React, { ReactNode } from 'react';
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Container, 
-  Box, 
-  Button, 
-  IconButton, 
-  Drawer, 
-  List, 
-  ListItem, 
-  ListItemIcon, 
-  ListItemText, 
-  Divider,
-  useTheme,
-  alpha
-} from '@mui/material';
+import React, { ReactNode, useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useContext, useState } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-// Importation directe des icônes Material-UI au lieu de @iconify
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
-import LoginIcon from '@mui/icons-material/Login';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import HistoryIcon from '@mui/icons-material/History';
+import { Icon } from '@iconify/react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -39,249 +12,137 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const theme = useTheme();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
+  const toggleDrawer = () => setDrawerOpen(!drawerOpen);
 
   const menuItems = [
-    { text: 'Accueil', icon: <HomeIcon />, path: '/' },
-    { text: 'Recherche', icon: <RestaurantIcon />, path: '/search' },
-    { text: 'Historique', icon: <HistoryIcon />, path: '/history' },
-    { text: 'Favoris', icon: <FavoriteIcon />, path: '/favorites' },
-    { text: 'Profil', icon: <AccountCircleIcon />, path: '/profile' },
+    { text: 'Accueil', icon: 'mdi:home', path: '/' },
+    { text: 'Recherche', icon: 'mdi:silverware-fork-knife', path: '/search' },
+    { text: 'Historique', icon: 'mdi:history', path: '/history' },
+    { text: 'Favoris', icon: 'mdi:heart', path: '/favorites' },
+    { text: 'Profil', icon: 'mdi:account-circle', path: '/profile' },
   ];
 
-  // Couleurs thématiques pour la cuisine
-  const appBarColor = '#A0522D'; // Orange chaleureux
-  const drawerColor = '#FFF9EC'; // Beige clair
-  const activeItemColor = '#FF6B35'; // Orange pour l'élément actif
-  const footerColor = '#4A4238'; // Brun foncé pour le pied de page
-  const backgroundColor = '#FFF9EC'; // Beige clair pour le fond
+  const navigateAndClose = (path: string) => {
+    navigate(path);
+    setDrawerOpen(false);
+  };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: backgroundColor }}>
-      <AppBar 
-        position="fixed" // Changer "static" en "fixed"
-        sx={{ 
-        bgcolor: appBarColor,
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        zIndex: (theme) => theme.zIndex.drawer + 1 // Assure que l'AppBar est au-dessus du Drawer
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleDrawer}
-            sx={{ 
-              mr: 2,
-              '&:hover': {
-                bgcolor: alpha('#fff', 0.2)
-              }
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography 
-            variant="h6" 
-            component="div" 
-            sx={{ 
-              flexGrow: 1, 
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            
-            Food Suggester
-          </Typography>
+    <div className="flex flex-col min-h-screen bg-orange-50 font-['Poppins']">
+      {/* AppBar */}
+      <header className="fixed top-0 left-0 right-0 bg-amber-800 shadow-lg z-50">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center">
+            <button
+              onClick={toggleDrawer}
+              className="p-2 text-white hover:bg-white/20 rounded-lg transition-colors mr-3"
+            >
+              <Icon icon="mdi:menu" className="w-6 h-6" />
+            </button>
+            <h1 className="text-xl font-semibold text-white">Food Suggester</h1>
+          </div>
+          
           {isAuthenticated ? (
-            <Button 
-              color="inherit" 
+            <button
               onClick={handleLogout}
-              startIcon={<LogoutIcon />}
-              sx={{ 
-                borderRadius: '20px',
-                px: 2,
-                '&:hover': {
-                  bgcolor: alpha('#fff', 0.2)
-                }
-              }}
+              className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/20 rounded-full transition-colors"
             >
+              <Icon icon="mdi:logout" className="w-5 h-5" />
               Déconnexion
-            </Button>
+            </button>
           ) : (
-            <Button 
-              color="inherit" 
+            <button
               onClick={() => navigate('/login')}
-              startIcon={<LoginIcon />}
-              sx={{ 
-                borderRadius: '20px',
-                px: 2,
-                '&:hover': {
-                  bgcolor: alpha('#fff', 0.2)
-                }
-              }}
+              className="flex items-center gap-2 px-4 py-2 text-white hover:bg-white/20 rounded-full transition-colors"
             >
+              <Icon icon="mdi:login" className="w-5 h-5" />
               Connexion
-            </Button>
+            </button>
           )}
-        </Toolbar>
-      </AppBar>
+        </div>
+      </header>
 
-      <Drawer 
-        anchor="left" 
-        open={drawerOpen} 
-        onClose={toggleDrawer}
-        PaperProps={{
-          sx: {
-            bgcolor: drawerColor,
-            width: 280
-          }
-        }}
-      >
-        <Box sx={{ py: 2, px: 1 }}>
-          <Typography 
-            variant="h6" 
-            align="center" 
-            sx={{ 
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 600,
-              color: '#4A4238',
-              mb: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <RestaurantMenuIcon sx={{ mr: 1, color: activeItemColor }} />
-            Food Suggester
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-          <List>
-            {menuItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <ListItem 
-                  button 
-                  key={item.text} 
-                  onClick={() => {
-                    navigate(item.path);
-                    toggleDrawer();
-                  }}
-                  sx={{
-                    borderRadius: '8px',
-                    mb: 1,
-                    bgcolor: isActive ? alpha(activeItemColor, 0.1) : 'transparent',
-                    color: isActive ? activeItemColor : 'inherit',
-                    '&:hover': {
-                      bgcolor: isActive ? alpha(activeItemColor, 0.15) : alpha('#000', 0.04)
-                    }
-                  }}
-                >
-                  <ListItemIcon 
-                    sx={{ 
-                      color: isActive ? activeItemColor : '#666',
-                      minWidth: '40px'
-                    }}
+      {/* Drawer */}
+      {drawerOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={toggleDrawer}
+          />
+          <aside className="fixed left-0 top-0 h-full w-72 bg-orange-50 shadow-xl z-50 transform transition-transform">
+            <div className="p-4">
+              {/* Drawer Header */}
+              <div className="flex items-center justify-center mb-6 pt-4">
+                <Icon icon="mdi:silverware" className="w-6 h-6 text-orange-600 mr-2" />
+                <h2 className="text-lg font-semibold text-amber-900">Food Suggester</h2>
+              </div>
+              
+              <hr className="border-gray-300 mb-4" />
+              
+              {/* Menu Items */}
+              <nav className="space-y-2">
+                {menuItems.map((item) => {
+                  const isActive = location.pathname === item.path;
+                  
+                  return (
+                    <button
+                      key={item.text}
+                      onClick={() => navigateAndClose(item.path)}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
+                        isActive
+                          ? 'bg-orange-600/10 text-orange-600 font-semibold'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <Icon 
+                        icon={item.icon} 
+                        className={`w-5 h-5 ${isActive ? 'text-orange-600' : 'text-gray-600'}`} 
+                      />
+                      {item.text}
+                    </button>
+                  );
+                })}
+              </nav>
+              
+              {/* Logout in Drawer */}
+              {isAuthenticated && (
+                <>
+                  <hr className="border-gray-300 my-4" />
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
                   >
-                    {React.cloneElement(item.icon as React.ReactElement, { 
-                      sx: { color: isActive ? activeItemColor : '#666' } 
-                    })}
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary={item.text} 
-                    primaryTypographyProps={{ 
-                      fontWeight: isActive ? 600 : 400,
-                      fontFamily: '"Poppins", sans-serif'
-                    }}
-                  />
-                </ListItem>
-              );
-            })}
-          </List>
-          <Divider sx={{ my: 2 }} />
-          {isAuthenticated && (
-            <List>
-              <ListItem 
-                button 
-                onClick={handleLogout}
-                sx={{
-                  borderRadius: '8px',
-                  color: '#D32F2F',
-                  '&:hover': {
-                    bgcolor: alpha('#D32F2F', 0.08)
-                  }
-                }}
-              >
-                <ListItemIcon 
-                  sx={{ 
-                    color: '#D32F2F',
-                    minWidth: '40px'
-                  }}
-                >
-                  <LogoutIcon sx={{ color: '#D32F2F' }} />
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Déconnexion" 
-                  primaryTypographyProps={{ 
-                    fontFamily: '"Poppins", sans-serif'
-                  }}
-                />
-              </ListItem>
-            </List>
-          )}
-        </Box>
-      </Drawer>
+                    <Icon icon="mdi:logout" className="w-5 h-5" />
+                    Déconnexion
+                  </button>
+                </>
+              )}
+            </div>
+          </aside>
+        </>
+      )}
 
-      <Container 
-        component="main" 
-        sx={{ 
-          flexGrow: 1, 
-          py: 4,
-          px: { xs: 2, sm: 4 },
-          maxWidth: { sm: '100%', md: '1100px' }
-        }}
-      >
+      {/* Main Content */}
+      <main className="flex-1 pt-20 px-4 sm:px-8 py-8 max-w-6xl mx-auto w-full">
         {children}
-      </Container>
+      </main>
 
-      <Box 
-        component="footer" 
-        sx={{ 
-          py: 3, 
-          bgcolor: footerColor, 
-          color: '#fff',
-          mt: 'auto' 
-        }}
-      >
-        <Container maxWidth="sm">
-          <Typography 
-            variant="body2" 
-            align="center"
-            sx={{ 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 1,
-              fontFamily: '"Poppins", sans-serif'
-            }}
-          >
-            <RestaurantMenuIcon fontSize="small" />
+      {/* Footer */}
+      <footer className="bg-amber-900 text-white py-6 mt-auto">
+        <div className="max-w-sm mx-auto">
+          <div className="flex items-center justify-center gap-2 text-sm">
+            <Icon icon="mdi:silverware" className="w-4 h-4" />
             © {new Date().getFullYear()} Food Suggester - FunnyVazoniaina
-          </Typography>
-        </Container>
-      </Box>
-    </Box>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 
