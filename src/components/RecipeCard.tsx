@@ -1,26 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Card, 
-  CardMedia, 
-  CardContent, 
-  Typography, 
-  CardActions, 
-  IconButton, 
-  Tooltip, 
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Divider
-} from '@mui/material';
 import { Icon } from '@iconify/react';
 import { recipeService } from '../services/api';
-import { useNavigate } from 'react-router-dom';
 
 interface RecipeCardProps {
   recipe: {
@@ -32,7 +12,6 @@ interface RecipeCardProps {
     likes?: number;
     isFavorite?: boolean;
     sourceUrl?: string;
-    // Nouvelles propriétés
     instructions?: string;
     readyInMinutes?: number;
     preparationMinutes?: number;
@@ -51,8 +30,6 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
   onFavoriteToggle,
   showFavoriteButton = true
 }) => {
-  const navigate = useNavigate();
-  // État pour contrôler l'ouverture/fermeture de la boîte de dialogue
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleFavoriteClick = async () => {
@@ -62,212 +39,193 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
       } else {
         await recipeService.addFavorite(recipe.id, recipe.title, recipe.image);
       }
-      if (onFavoriteToggle) {
-        onFavoriteToggle();
-      }
+      onFavoriteToggle?.();
     } catch (error) {
       console.error('Error toggling favorite', error);
     }
   };
 
-  // Ouvrir la boîte de dialogue au lieu de naviguer
-  const handleViewRecipe = () => {
-    setOpenDialog(true);
-  };
-
-  // Fermer la boîte de dialogue
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-  };
-
-  // Ouvrir l'URL source dans un nouvel onglet
   const handleOpenSourceUrl = () => {
     if (recipe.sourceUrl) {
       window.open(recipe.sourceUrl, '_blank');
     }
   };
 
+  const InfoItem = ({ icon, color, text }: { icon: string; color: string; text: string }) => (
+    <div className="flex items-center mb-2">
+      <Icon icon={icon} className={`w-5 h-5 ${color} mr-2`} />
+      <span className="text-sm text-gray-600">{text}</span>
+    </div>
+  );
+
+  const TimeInfo = ({ icon, color, label, value }: { icon: string; color: string; label: string; value: number }) => (
+    <div className="flex items-center mb-2">
+      <Icon icon={icon} className={`w-6 h-6 ${color} mr-2`} />
+      <span className="text-base">{label}: {value} minutes</span>
+    </div>
+  );
+
   return (
     <>
-      <Card sx={{ 
-        maxWidth: 345, 
-        height: '100%', 
-        display: 'flex', 
-        flexDirection: 'column',
-        transition: 'transform 0.3s, box-shadow 0.3s',
-        '&:hover': {
-          transform: 'translateY(-5px)',
-          boxShadow: 6
-        }
-      }}>
-        <CardMedia
-          component="img"
-          height="180"
-          image={recipe.image}
+      {/* Recipe Card */}
+      <div className="max-w-sm h-full flex flex-col bg-white rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <img
+          src={recipe.image}
           alt={recipe.title}
+          className="w-full h-45 object-cover rounded-t-lg"
         />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography gutterBottom variant="h6" component="div" noWrap title={recipe.title}>
+        
+        <div className="flex-1 p-4">
+          <h3 className="text-lg font-semibold mb-3 truncate" title={recipe.title}>
             {recipe.title}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Icon icon="mdi:check-circle" color="#4caf50" width="20" height="20" />
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-              {recipe.usedIngredientCount} ingrédients utilisés
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Icon icon="mdi:alert-circle" color="#ff9800" width="20" height="20" />
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-              {recipe.missedIngredientCount} ingrédients manquants
-            </Typography>
-          </Box>
+          </h3>
+          
+          <InfoItem 
+            icon="mdi:check-circle" 
+            color="text-green-500" 
+            text={`${recipe.usedIngredientCount} ingrédients utilisés`} 
+          />
+          <InfoItem 
+            icon="mdi:alert-circle" 
+            color="text-orange-500" 
+            text={`${recipe.missedIngredientCount} ingrédients manquants`} 
+          />
           {recipe.readyInMinutes && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-              <Icon icon="mdi:clock-outline" color="#2196f3" width="20" height="20" />
-              <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                Prêt en {recipe.readyInMinutes} minutes
-              </Typography>
-            </Box>
+            <InfoItem 
+              icon="mdi:clock-outline" 
+              color="text-blue-500" 
+              text={`Prêt en ${recipe.readyInMinutes} minutes`} 
+            />
           )}
-        </CardContent>
-        <CardActions disableSpacing>
-          {showFavoriteButton && (
-            <Tooltip title={recipe.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}>
-              <IconButton aria-label="add to favorites" onClick={handleFavoriteClick}>
+        </div>
+        
+        <div className="flex items-center justify-between p-4 pt-0">
+          <div className="flex items-center gap-2">
+            {showFavoriteButton && (
+              <button
+                onClick={handleFavoriteClick}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+                title={recipe.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+              >
                 <Icon 
                   icon={recipe.isFavorite ? "mdi:heart" : "mdi:heart-outline"} 
-                  color={recipe.isFavorite ? "#f44336" : "inherit"} 
-                  width="24" 
-                  height="24" 
+                  className={`w-6 h-6 ${recipe.isFavorite ? 'text-red-500' : 'text-gray-500'}`}
                 />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title="Voir la recette">
-            <IconButton aria-label="view recipe" onClick={handleViewRecipe}>
-              <Icon icon="mdi:book-open-variant" width="24" height="24" />
-            </IconButton>
-          </Tooltip>
+              </button>
+            )}
+            <button
+              onClick={() => setOpenDialog(true)}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              title="Voir la recette"
+            >
+              <Icon icon="mdi:book-open-variant" className="w-6 h-6 text-gray-700" />
+            </button>
+          </div>
+          
           {recipe.likes !== undefined && (
-            <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-              <Icon icon="mdi:thumb-up" width="20" height="20" />
-              <Typography variant="body2" color="text.secondary" sx={{ ml: 0.5 }}>
-                {recipe.likes}
-              </Typography>
-            </Box>
+            <div className="flex items-center">
+              <Icon icon="mdi:thumb-up" className="w-5 h-5 text-gray-500 mr-1" />
+              <span className="text-sm text-gray-600">{recipe.likes}</span>
+            </div>
           )}
-        </CardActions>
-      </Card>
+        </div>
+      </div>
 
-      {/* Boîte de dialogue pour afficher les détails de la recette */}
-      <Dialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        aria-labelledby="recipe-dialog-title"
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle id="recipe-dialog-title">
-          {recipe.title}
-        </DialogTitle>
-        <DialogContent dividers>
-          <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, mb: 2 }}>
-            <Box sx={{ flex: '0 0 40%', mr: { md: 2 }, mb: { xs: 2, md: 0 } }}>
-              <img 
-                src={recipe.image} 
-                alt={recipe.title} 
-                style={{ width: '100%', borderRadius: '8px' }} 
-              />
-            </Box>
-            <Box sx={{ flex: '1 1 auto' }}>
-              <Typography variant="h6" gutterBottom>
-                Temps de préparation
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 3 }}>
-                {recipe.readyInMinutes && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon icon="mdi:clock-outline" color="#2196f3" width="24" height="24" />
-                    <Typography variant="body1" sx={{ ml: 1 }}>
-                      Temps total: {recipe.readyInMinutes} minutes
-                    </Typography>
-                  </Box>
-                )}
-                {recipe.preparationMinutes && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon icon="mdi:knife" color="#9c27b0" width="24" height="24" />
-                    <Typography variant="body1" sx={{ ml: 1 }}>
-                      Préparation: {recipe.preparationMinutes} minutes
-                    </Typography>
-                  </Box>
-                )}
-                {recipe.cookingMinutes && (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon icon="mdi:pot-steam" color="#ff5722" width="24" height="24" />
-                    <Typography variant="body1" sx={{ ml: 1 }}>
-                      Cuisson: {recipe.cookingMinutes} minutes
-                    </Typography>
-                  </Box>
-                )}
-              </Box>
-              
-              <Typography variant="h6" gutterBottom>
-                Ingrédients
-              </Typography>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="body1" color="text.secondary">
-                  {recipe.usedIngredientCount} ingrédients utilisés, {recipe.missedIngredientCount} ingrédients manquants
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-          
-          <Divider sx={{ my: 2 }} />
-          
-          <Typography variant="h6" gutterBottom>
-            Instructions
-          </Typography>
-          
-          {recipe.instructions ? (
-            <Typography variant="body1" paragraph>
-              {recipe.instructions}
-            </Typography>
-          ) : recipe.steps && recipe.steps.length > 0 ? (
-            <List>
-              {recipe.steps.map((step) => (
-                <ListItem key={step.number}>
-                  <ListItemText
-                    primary={`Étape ${step.number}`}
-                    secondary={step.step}
+      {/* Recipe Dialog */}
+      {openDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Dialog Header */}
+            <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+              <h2 className="text-xl font-semibold">{recipe.title}</h2>
+              <button
+                onClick={() => setOpenDialog(false)}
+                className="p-1 rounded-full hover:bg-gray-100"
+              >
+                <Icon icon="mdi:close" className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Dialog Content */}
+            <div className="p-6">
+              <div className="flex flex-col md:flex-row mb-6">
+                <div className="md:w-2/5 md:mr-6 mb-4 md:mb-0">
+                  <img 
+                    src={recipe.image} 
+                    alt={recipe.title} 
+                    className="w-full rounded-lg" 
                   />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography variant="body1" color="text.secondary">
-              Aucune instruction disponible. Consultez la source originale pour plus de détails.
-            </Typography>
-          )}
-          
-          {recipe.sourceUrl && (
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="body2" color="text.secondary">
-                Pour des instructions plus détaillées, consultez la source originale.
-              </Typography>
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          {recipe.sourceUrl && (
-            <Button onClick={handleOpenSourceUrl} color="primary">
-              Voir la source originale
-            </Button>
-          )}
-          <Button onClick={handleCloseDialog} color="primary">
-            Fermer
-          </Button>
-        </DialogActions>
-      </Dialog>
+                </div>
+                
+                <div className="md:w-3/5">
+                  <h3 className="text-lg font-semibold mb-4">Temps de préparation</h3>
+                  <div className="space-y-2 mb-6">
+                    {recipe.readyInMinutes && (
+                      <TimeInfo icon="mdi:clock-outline" color="text-blue-500" label="Temps total" value={recipe.readyInMinutes} />
+                    )}
+                    {recipe.preparationMinutes && (
+                      <TimeInfo icon="mdi:knife" color="text-purple-500" label="Préparation" value={recipe.preparationMinutes} />
+                    )}
+                    {recipe.cookingMinutes && (
+                      <TimeInfo icon="mdi:pot-steam" color="text-red-500" label="Cuisson" value={recipe.cookingMinutes} />
+                    )}
+                  </div>
+                  
+                  <h3 className="text-lg font-semibold mb-2">Ingrédients</h3>
+                  <p className="text-gray-600 mb-4">
+                    {recipe.usedIngredientCount} ingrédients utilisés, {recipe.missedIngredientCount} ingrédients manquants
+                  </p>
+                </div>
+              </div>
+              
+              <hr className="my-6" />
+              
+              <h3 className="text-lg font-semibold mb-4">Instructions</h3>
+              
+              {recipe.instructions ? (
+                <p className="text-base leading-relaxed mb-4">{recipe.instructions}</p>
+              ) : recipe.steps && recipe.steps.length > 0 ? (
+                <div className="space-y-4">
+                  {recipe.steps.map((step) => (
+                    <div key={step.number} className="border-l-4 border-blue-500 pl-4">
+                      <h4 className="font-medium text-blue-700 mb-1">Étape {step.number}</h4>
+                      <p className="text-gray-700">{step.step}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 mb-4">
+                  Aucune instruction disponible. Consultez la source originale pour plus de détails.
+                </p>
+              )}
+              
+              {recipe.sourceUrl && (
+                <p className="text-sm text-gray-500 mt-4">
+                  Pour des instructions plus détaillées, consultez la source originale.
+                </p>
+              )}
+            </div>
+            
+            {/* Dialog Actions */}
+            <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex justify-end gap-3">
+              {recipe.sourceUrl && (
+                <button
+                  onClick={handleOpenSourceUrl}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  Voir la source originale
+                </button>
+              )}
+              <button
+                onClick={() => setOpenDialog(false)}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
