@@ -1,19 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Typography, 
-  Box, 
-  Grid, 
-  CircularProgress, 
-  Alert, 
-  Button, 
-  Paper,
-  Divider,
-  alpha,
-  useTheme
-} from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import SearchIcon from '@mui/icons-material/Search';
-import RestaurantIcon from '@mui/icons-material/Restaurant';
+import { Icon } from '@iconify/react';
 import Layout from '../components/Layout';
 import RecipeCard from '../components/RecipeCard';
 import { recipeService } from '../services/api';
@@ -31,19 +17,11 @@ const FavoritesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const theme = useTheme();
-
-  // Couleurs thématiques
-  const primaryColor = '#FF6B35'; // Orange chaleureux
-  const backgroundColor = '#FFF9EC'; // Beige clair
-  const textColor = '#4A4238'; // Brun foncé
-  const heartColor = '#E63946'; // Rouge pour les cœurs
 
   const fetchFavorites = async () => {
     try {
       setLoading(true);
       const data = await recipeService.getFavorites();
-      // Transformer les données pour correspondre à la structure attendue par RecipeCard
       const formattedFavorites = data.map((fav: any) => ({
         id: fav.id,
         title: fav.title,
@@ -71,147 +49,62 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <Layout>
-      <Box sx={{ mb: 4 }}>
-        <Typography 
-          variant="h4" 
-          component="h1" 
-          gutterBottom
-          sx={{ 
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 600,
-            color: textColor,
-            display: 'flex',
-            alignItems: 'center',
-            mb: 3
-          }}
-        >
-          <FavoriteIcon sx={{ mr: 1, color: heartColor }} />
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-amber-900 flex items-center mb-3 font-['Poppins']">
+          <Icon icon="mdi:heart" className="w-8 h-8 text-red-500 mr-3" />
           Mes recettes favorites
-        </Typography>
+        </h1>
         
-        <Typography 
-          variant="body1" 
-          sx={{ 
-            mb: 3, 
-            color: alpha(textColor, 0.8),
-            fontFamily: '"Poppins", sans-serif'
-          }}
-        >
+        <p className="text-amber-800/80 mb-4 font-['Poppins']">
           Retrouvez ici toutes les recettes que vous avez ajoutées à vos favoris.
-        </Typography>
+        </p>
         
-        <Divider sx={{ mb: 4 }} />
-      </Box>
+        <hr className="border-amber-200 mb-6" />
+      </div>
 
       {error && (
-        <Alert 
-          severity="error" 
-          sx={{ 
-            mb: 3,
-            borderRadius: 2,
-            '& .MuiAlert-icon': {
-              color: '#D32F2F'
-            }
-          }}
-        >
-          {error}
-        </Alert>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <div className="flex items-center">
+            <Icon icon="mdi:alert-circle" className="w-5 h-5 mr-2" />
+            {error}
+          </div>
+        </div>
       )}
 
       {loading ? (
-        <Box 
-          sx={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            my: 8 
-          }}
-        >
-          <CircularProgress sx={{ color: primaryColor, mb: 2 }} />
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: alpha(textColor, 0.8),
-              fontFamily: '"Poppins", sans-serif'
-            }}
-          >
+        <div className="flex flex-col items-center justify-center py-16">
+          <Icon icon="mdi:loading" className="w-8 h-8 text-orange-600 animate-spin mb-3" />
+          <p className="text-amber-800/80 font-['Poppins']">
             Chargement de vos favoris...
-          </Typography>
-        </Box>
+          </p>
+        </div>
       ) : favorites.length > 0 ? (
-        <Grid container spacing={3}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {favorites.map((recipe) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={recipe.id}>
-              <RecipeCard 
-                recipe={recipe} 
-                onFavoriteToggle={handleFavoriteToggle}
-              />
-            </Grid>
+            <RecipeCard 
+              key={recipe.id}
+              recipe={recipe} 
+              onFavoriteToggle={handleFavoriteToggle}
+            />
           ))}
-        </Grid>
+        </div>
       ) : (
-        <Paper 
-          elevation={0} 
-          sx={{ 
-            textAlign: 'center', 
-            py: 8,
-            px: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            bgcolor: alpha(backgroundColor, 0.5),
-            borderRadius: 3,
-            border: `1px dashed ${alpha(textColor, 0.2)}`
-          }}
-        >
-          <FavoriteIcon sx={{ fontSize: 60, color: alpha(heartColor, 0.3), mb: 2 }} />
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              color: textColor,
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 500,
-              mb: 1
-            }}
-          >
+        <div className="text-center py-16 px-6 bg-orange-50/50 rounded-xl border border-dashed border-amber-200">
+          <Icon icon="mdi:heart-outline" className="w-16 h-16 text-red-300 mx-auto mb-4" />
+          <h3 className="text-xl font-medium text-amber-900 mb-2 font-['Poppins']">
             Vous n'avez pas encore de recettes favorites
-          </Typography>
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: alpha(textColor, 0.7),
-              fontFamily: '"Poppins", sans-serif',
-              mb: 3,
-              maxWidth: 500,
-              mx: 'auto'
-            }}
-          >
+          </h3>
+          <p className="text-amber-800/70 mb-6 max-w-md mx-auto font-['Poppins']">
             Explorez des recettes et ajoutez-les à vos favoris pour les retrouver facilement ici.
-          </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
+          </p>
+          <button 
             onClick={() => navigate('/search')}
-            startIcon={<SearchIcon />}
-            sx={{ 
-              bgcolor: primaryColor,
-              borderRadius: 2,
-              textTransform: 'none',
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 500,
-              px: 3,
-              py: 1.2,
-              boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)',
-              '&:hover': {
-                bgcolor: alpha(primaryColor, 0.9),
-                boxShadow: '0 6px 15px rgba(255, 107, 53, 0.4)',
-              }
-            }}
+            className="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium font-['Poppins'] shadow-lg hover:shadow-xl"
           >
+            <Icon icon="mdi:magnify" className="w-5 h-5 mr-2" />
             Rechercher des recettes
-          </Button>
-        </Paper>
+          </button>
+        </div>
       )}
     </Layout>
   );

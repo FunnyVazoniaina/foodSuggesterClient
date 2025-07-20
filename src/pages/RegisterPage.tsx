@@ -1,84 +1,55 @@
-import React, { useState, useContext } from 'react';
-import { 
-  Typography, 
-  Box, 
-  TextField, 
-  Button, 
-  Paper, 
-  Link, 
-  Alert,
-  InputAdornment,
-  IconButton,
-  Stepper,
-  Step,
-  StepLabel,
-  alpha,
-  useTheme
-} from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Icon } from '@iconify/react';
-import { AuthContext } from '../contexts/AuthContext';
+import React, { useState, useContext } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const RegisterPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+  const [avatar, setAvatar] = useState("");
+
   const { register } = useContext(AuthContext);
   const navigate = useNavigate();
-  const theme = useTheme();
 
-  // Couleurs thématiques
-  const primaryColor = '#FF6B35'; // Orange chaleureux
-  const backgroundColor = '#FFF9EC'; // Beige clair
-  const textColor = '#4A4238'; // Brun foncé
-  const stepperActiveColor = primaryColor;
-  const stepperCompletedColor = '#4CAF50';
-
-  const steps = ['Informations personnelles', 'Sécurité'];
+  const steps = ["Informations personnelles", "Sécurité"];
 
   const validateStep1 = () => {
     if (!name || !email) {
-      setError('Veuillez remplir tous les champs');
+      setError("Veuillez remplir tous les champs");
       return false;
     }
-    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Veuillez entrer une adresse email valide');
+      setError("Veuillez entrer une adresse email valide");
       return false;
     }
-    
     return true;
   };
 
   const validateStep2 = () => {
     if (!password || !confirmPassword) {
-      setError('Veuillez remplir tous les champs');
+      setError("Veuillez remplir tous les champs");
       return false;
     }
-    
     if (password.length < 8) {
-      setError('Le mot de passe doit contenir au moins 8 caractères');
+      setError("Le mot de passe doit contenir au moins 8 caractères");
       return false;
     }
-    
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      setError("Les mots de passe ne correspondent pas");
       return false;
     }
-    
     return true;
   };
 
   const handleNext = () => {
-    setError('');
-    
+    setError("");
     if (activeStep === 0 && validateStep1()) {
       setActiveStep(1);
     } else if (activeStep === 1 && validateStep2()) {
@@ -88,350 +59,217 @@ const RegisterPage: React.FC = () => {
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
-    setError('');
+    setError("");
   };
 
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await register(name, email, password);
-      navigate('/login', { state: { message: 'Inscription réussie ! Vous pouvez maintenant vous connecter.' } });
+      await register(name, email, password, avatar);
+      navigate("/login", {
+        state: {
+          message: "Inscription réussie ! Vous pouvez maintenant vous connecter.",
+        },
+      });
     } catch (err: any) {
-      console.error('Registration error:', err);
-      setError(err.response?.data?.message || 'Une erreur est survenue lors de l\'inscription');
+      console.error("Registration error:", err);
+      setError(
+        err.response?.data?.message ||
+          "Une erreur est survenue lors de l'inscription"
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  const InputField = ({ 
+    id, label, type = "text", value, onChange, required = false, 
+    icon, endIcon, onEndIconClick, placeholder 
+  }: {
+    id: string; label: string; type?: string; value: string; 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    required?: boolean; icon: string; endIcon?: string;
+    onEndIconClick?: () => void; placeholder?: string;
+  }) => (
+    <div className="mb-4">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Icon icon={icon} className="w-5 h-5 text-gray-400" />
+        </div>
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+        />
+        {endIcon && (
+          <button
+            type="button"
+            onClick={onEndIconClick}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          >
+            <Icon icon={endIcon} className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        bgcolor: backgroundColor,
-        p: 2
-      }}
-    >
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: { xs: 3, sm: 4 }, 
-          maxWidth: 550, 
-          width: '100%',
-          borderRadius: 3,
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.05)'
-        }}
-      >
-        <Box sx={{ textAlign: 'center', mb: 3 }}>
-          <Icon 
-            icon="mdi:silverware-fork-knife" 
-            width="64" 
-            height="64" 
-            style={{ color: primaryColor }} 
-          />
-          <Typography 
-            variant="h4" 
-            component="h1" 
-            gutterBottom
-            sx={{ 
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 600,
-              color: textColor,
-              mt: 1
-            }}
-          >
-            Food Suggester
-          </Typography>
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              color: 'text.secondary',
-              fontFamily: '"Poppins", sans-serif'
-            }}
-          >
-            Créez votre compte
-          </Typography>
-        </Box>
+    <div className="min-h-screen flex items-center justify-center bg-orange-50 p-4 font-['Poppins',sans-serif]">
+      <div className="w-full max-w-lg bg-white rounded-2xl shadow-lg p-8">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <Icon icon="mdi:silverware-fork-knife" className="w-16 h-16 text-orange-500 mx-auto mb-2" />
+          <h1 className="text-3xl font-semibold text-amber-900 mb-1">Food Suggester</h1>
+          <p className="text-gray-600">Créez votre compte</p>
+        </div>
 
-        <Stepper 
-          activeStep={activeStep} 
-          sx={{ 
-            mb: 4,
-            '& .MuiStepIcon-root.Mui-active': {
-              color: stepperActiveColor,
-            },
-            '& .MuiStepIcon-root.Mui-completed': {
-              color: stepperCompletedColor,
-            },
-            '& .MuiStepLabel-label': {
-              fontFamily: '"Poppins", sans-serif',
-              fontSize: '0.9rem'
-            }
-          }}
-        >
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
+        {/* Stepper */}
+        <div className="flex items-center justify-center mb-8">
+          {steps.map((step, index) => (
+            <div key={step} className="flex items-center">
+              <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
+                index <= activeStep 
+                  ? index === activeStep 
+                    ? 'bg-orange-500 text-white' 
+                    : 'bg-green-500 text-white'
+                  : 'bg-gray-200 text-gray-500'
+              }`}>
+                {index < activeStep ? (
+                  <Icon icon="mdi:check" className="w-4 h-4" />
+                ) : (
+                  index + 1
+                )}
+              </div>
+              {index < steps.length - 1 && (
+                <div className={`w-16 h-0.5 mx-2 ${
+                  index < activeStep ? 'bg-green-500' : 'bg-gray-200'
+                }`} />
+              )}
+            </div>
           ))}
-        </Stepper>
+        </div>
+        <div className="text-center mb-6">
+          <p className="text-sm text-gray-600 font-medium">{steps[activeStep]}</p>
+        </div>
 
+        {/* Error Alert */}
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
-              mb: 3,
-              borderRadius: 2,
-              '& .MuiAlert-icon': {
-                color: '#D32F2F'
-              }
-            }}
-          >
-            {error}
-          </Alert>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+            <Icon icon="mdi:alert-circle" className="w-5 h-5 text-red-500 flex-shrink-0" />
+            <span className="text-red-700 text-sm">{error}</span>
+          </div>
         )}
 
-        <Box>
+        {/* Form */}
+        <form onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
           {activeStep === 0 ? (
             <>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
+              <InputField
                 id="name"
                 label="Nom complet"
-                name="name"
-                autoComplete="name"
-                autoFocus
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Icon icon="mdi:account" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&.Mui-focused fieldset': {
-                      borderColor: primaryColor,
-                    },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: primaryColor,
-                  },
-                  mb: 2
-                }}
-              />
-              <TextField
-                margin="normal"
                 required
-                fullWidth
+                icon="mdi:account"
+                placeholder="Entrez votre nom complet"
+              />
+              <InputField
                 id="email"
                 label="Adresse email"
-                name="email"
-                autoComplete="email"
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Icon icon="mdi:email" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&.Mui-focused fieldset': {
-                      borderColor: primaryColor,
-                    },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: primaryColor,
-                  },
-                  mb: 2
-                }}
+                required
+                icon="mdi:email"
+                placeholder="Entrez votre adresse email"
               />
             </>
           ) : (
             <>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Mot de passe"
-                type={showPassword ? 'text' : 'password'}
+              <InputField
+                id="avatar"
+                label="URL de l'avatar (optionnel)"
+                value={avatar}
+                onChange={(e) => setAvatar(e.target.value)}
+                icon="mdi:image"
+                placeholder="https://exemple.com/avatar.jpg"
+              />
+              <InputField
                 id="password"
-                autoComplete="new-password"
+                label="Mot de passe"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Icon icon="mdi:lock" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        <Icon 
-                          icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} 
-                          width="20" 
-                          height="20" 
-                          style={{ color: alpha(textColor, 0.7) }}
-                        />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&.Mui-focused fieldset': {
-                      borderColor: primaryColor,
-                    },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: primaryColor,
-                  },
-                  mb: 2
-                }}
-              />
-              <TextField
-                margin="normal"
                 required
-                fullWidth
-                name="confirmPassword"
-                label="Confirmer le mot de passe"
-                type={showPassword ? 'text' : 'password'}
+                icon="mdi:lock"
+                endIcon={showPassword ? "mdi:eye-off" : "mdi:eye"}
+                onEndIconClick={() => setShowPassword(!showPassword)}
+                placeholder="Entrez votre mot de passe"
+              />
+              <InputField
                 id="confirmPassword"
-                autoComplete="new-password"
+                label="Confirmer le mot de passe"
+                type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Icon icon="mdi:lock-check" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 2,
-                    '&.Mui-focused fieldset': {
-                      borderColor: primaryColor,
-                    },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: primaryColor,
-                  },
-                  mb: 2
-                }}
+                required
+                icon="mdi:lock-check"
+                placeholder="Confirmez votre mot de passe"
               />
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  display: 'block', 
-                  mt: 1, 
-                  mb: 2,
-                  color: alpha(textColor, 0.7),
-                  fontFamily: '"Poppins", sans-serif'
-                }}
-              >
-                <Icon 
-                  icon="mdi:information-outline" 
-                  width="16" 
-                  height="16" 
-                  style={{ verticalAlign: 'text-bottom', marginRight: '4px' }} 
-                />
-                Le mot de passe doit contenir au moins 8 caractères.
-              </Typography>
+              <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg flex items-start gap-2">
+                <Icon icon="mdi:information-outline" className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                <span className="text-blue-700 text-xs">
+                  Le mot de passe doit contenir au moins 8 caractères.
+                </span>
+              </div>
             </>
           )}
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-            <Button
-              disabled={activeStep === 0}
+          {/* Buttons */}
+          <div className="flex justify-between gap-4 mt-8">
+            <button
+              type="button"
               onClick={handleBack}
-              variant="outlined"
-              sx={{ 
-                borderRadius: 2,
-                borderColor: alpha(textColor, 0.5),
-                color: textColor,
-                textTransform: 'none',
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: 500,
-                '&:hover': {
-                  borderColor: textColor,
-                  bgcolor: alpha(textColor, 0.04)
-                }
-              }}
+              disabled={activeStep === 0}
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Retour
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleNext}
+            </button>
+            <button
+              type="submit"
               disabled={loading}
-              sx={{ 
-                py: 1.2,
-                px: 3,
-                bgcolor: primaryColor,
-                borderRadius: 2,
-                textTransform: 'none',
-                fontFamily: '"Poppins", sans-serif',
-                fontWeight: 500,
-                fontSize: '1rem',
-                boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)',
-                '&:hover': {
-                  bgcolor: alpha(primaryColor, 0.9),
-                  boxShadow: '0 6px 15px rgba(255, 107, 53, 0.4)',
-                }
-              }}
+              className="px-8 py-3 bg-orange-500 text-white rounded-lg font-medium shadow-lg hover:bg-orange-600 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {activeStep === steps.length - 1 ? (loading ? 'Inscription en cours...' : 'S\'inscrire') : 'Suivant'}
-            </Button>
-          </Box>
+              {activeStep === steps.length - 1
+                ? loading
+                  ? "Inscription en cours..."
+                  : "S'inscrire"
+                : "Suivant"}
+            </button>
+          </div>
+        </form>
 
-          <Box sx={{ textAlign: 'center', mt: 3 }}>
-            <Typography 
-              variant="body2"
-              sx={{ 
-                fontFamily: '"Poppins", sans-serif',
-                color: alpha(textColor, 0.8)
-              }}
+        {/* Login Link */}
+        <div className="text-center mt-6">
+          <p className="text-gray-600 text-sm">
+            Déjà un compte ?{" "}
+            <RouterLink
+              to="/login"
+              className="text-orange-500 font-medium hover:underline"
             >
-              Déjà un compte ?{' '}
-              <Link 
-                component={RouterLink} 
-                to="/login" 
-                sx={{ 
-                  color: primaryColor,
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'underline'
-                  }
-                }}
-              >
-                Connectez-vous
-              </Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-    </Box>
+              Connectez-vous
+            </RouterLink>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

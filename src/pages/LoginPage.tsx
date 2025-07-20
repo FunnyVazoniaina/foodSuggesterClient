@@ -1,21 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { 
-  Typography, 
-  Box, 
-  TextField, 
-  Button, 
-  Paper, 
-  Link, 
-  Alert,
-  InputAdornment,
-  IconButton,
-  useTheme,
-  alpha,
-  Divider
-} from '@mui/material';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 import { AuthContext } from '../contexts/AuthContext';
+import { Icon } from '@iconify/react';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -24,43 +10,29 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login, loginWithGoogle } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-
-  // Couleurs thématiques
-  const primaryColor = '#FF6B35'; // Orange chaleureux
-  const backgroundColor = '#FFF9EC'; // Beige clair
-  const textColor = '#4A4238'; // Brun foncé
 
   useEffect(() => {
-    // Vérifier si un message de succès est passé via location state
-    if (location.state && location.state.message) {
+    if (location.state?.message) {
       setSuccess(location.state.message);
-      // Nettoyer l'état de navigation pour éviter d'afficher le message après un rafraîchissement
       window.history.replaceState({}, document.title);
     }
   }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validation simple
-    if (!email || !password) {
-      setError('Veuillez remplir tous les champs');
-      return;
-    }
-    
+    if (!email || !password) return setError('Veuillez remplir tous les champs');
     try {
       setLoading(true);
       setError('');
       await login(email, password);
       navigate('/');
     } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
+      console.error(err);
+      setError(err.response?.data?.message || 'Erreur de connexion');
     } finally {
       setLoading(false);
     }
@@ -72,262 +44,98 @@ const LoginPage: React.FC = () => {
       setError('');
       await loginWithGoogle();
       navigate('/');
-    } catch (err: any) {
-      console.error('Google login error:', err);
-      setError('Une erreur est survenue lors de la connexion avec Google');
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de la connexion avec Google");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box 
-      sx={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        bgcolor: backgroundColor,
-        p: 2
-      }}
-    >
-      <Paper 
-        elevation={3} 
-        sx={{ 
-          p: { xs: 3, sm: 4 }, 
-          maxWidth: 450, 
-          width: '100%',
-          borderRadius: 3,
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.05)'
-        }}
-      >
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Icon 
-            icon="mdi:silverware-fork-knife" 
-            width="64" 
-            height="64" 
-            style={{ color: primaryColor }} 
-          />
-          <Typography 
-            variant="h4" 
-            component="h1" 
-            gutterBottom
-            sx={{ 
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 600,
-              color: textColor,
-              mt: 1
-            }}
-          >
-            Food Suggester
-          </Typography>
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              color: 'text.secondary',
-              fontFamily: '"Poppins", sans-serif'
-            }}
-          >
-            Connectez-vous à votre compte
-          </Typography>
-        </Box>
+    <div className="min-h-screen flex items-center justify-center bg-[#FFF9EC] p-4">
+      <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-6 sm:p-8">
+        <div className="text-center mb-6">
+          <Icon icon="mdi:silverware-fork-knife" className="text-[#FF6B35]" width="64" height="64" />
+          <h1 className="text-3xl font-semibold text-[#4A4238] mt-2 font-poppins">Food Suggester</h1>
+          <p className="text-gray-500 font-poppins">Connectez-vous à votre compte</p>
+        </div>
 
         {error && (
-          <Alert 
-            severity="error" 
-            sx={{ 
-              mb: 3,
-              borderRadius: 2,
-              '& .MuiAlert-icon': {
-                color: '#D32F2F'
-              }
-            }}
-          >
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg mb-4 text-sm">
             {error}
-          </Alert>
+          </div>
         )}
-
         {success && (
-          <Alert 
-            severity="success" 
-            sx={{ 
-              mb: 3,
-              borderRadius: 2
-            }}
-          >
+          <div className="bg-green-100 text-green-700 px-4 py-2 rounded-lg mb-4 text-sm">
             {success}
-          </Alert>
+          </div>
         )}
 
-        {/* Bouton de connexion Google */}
-        <Button
-          fullWidth
-          variant="outlined"
+        <button
           onClick={handleGoogleLogin}
           disabled={loading}
-          startIcon={<Icon icon="logos:google-icon" width="20" height="20" />}
-          sx={{ 
-            py: 1.2,
-            borderRadius: 2,
-            textTransform: 'none',
-            fontFamily: '"Poppins", sans-serif',
-            fontWeight: 500,
-            fontSize: '1rem',
-            mb: 2,
-            borderColor: '#DADCE0',
-            color: textColor,
-            '&:hover': {
-              borderColor: '#DADCE0',
-              bgcolor: alpha('#DADCE0', 0.1),
-            }
-          }}
+          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-3 mb-4 font-medium font-poppins text-[#4A4238] hover:bg-gray-100 transition"
         >
+          <Icon icon="logos:google-icon" width="20" className="mr-2" />
           {loading ? 'Connexion en cours...' : 'Se connecter avec Google'}
-        </Button>
+        </button>
 
-        <Divider sx={{ my: 2 }}>
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              color: alpha(textColor, 0.6),
-              fontFamily: '"Poppins", sans-serif'
-            }}
-          >
-            ou
-          </Typography>
-        </Divider>
+        <div className="flex items-center my-4">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="px-3 text-sm text-gray-500 font-poppins">ou</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
 
-        <Box component="form" onSubmit={handleSubmit}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Adresse email"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Icon icon="mdi:email" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                '&.Mui-focused fieldset': {
-                  borderColor: primaryColor,
-                },
-              },
-              '& .MuiInputLabel-root.Mui-focused': {
-                color: primaryColor,
-              },
-              mb: 2
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Mot de passe"
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Icon icon="mdi:lock" width="20" height="20" style={{ color: alpha(textColor, 0.7) }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    <Icon 
-                      icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} 
-                      width="20" 
-                      height="20" 
-                      style={{ color: alpha(textColor, 0.7) }}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                '&.Mui-focused fieldset': {
-                  borderColor: primaryColor,
-                },
-              },
-              '& .MuiInputLabel-root.Mui-focused': {
-                color: primaryColor,
-              },
-              mb: 2
-            }}
-          />
-          <Button
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="relative">
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] outline-none font-poppins"
+              placeholder="Adresse email"
+            />
+            <Icon icon="mdi:email" className="absolute left-3 top-3.5 text-gray-400" width="20" />
+          </div>
+
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-10 py-3 rounded-lg border border-gray-300 focus:border-[#FF6B35] focus:ring-1 focus:ring-[#FF6B35] outline-none font-poppins"
+              placeholder="Mot de passe"
+            />
+            <Icon icon="mdi:lock" className="absolute left-3 top-3.5 text-gray-400" width="20" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2.5 text-gray-400"
+            >
+              <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} width="20" />
+            </button>
+          </div>
+
+          <button
             type="submit"
-            fullWidth
-            variant="contained"
             disabled={loading}
-            sx={{ 
-              mt: 2, 
-              mb: 3,
-              py: 1.2,
-              bgcolor: primaryColor,
-              borderRadius: 2,
-              textTransform: 'none',
-              fontFamily: '"Poppins", sans-serif',
-              fontWeight: 500,
-              fontSize: '1rem',
-              boxShadow: '0 4px 10px rgba(255, 107, 53, 0.3)',
-              '&:hover': {
-                bgcolor: alpha(primaryColor, 0.9),
-                boxShadow: '0 6px 15px rgba(255, 107, 53, 0.4)',
-              }
-            }}
+            className="w-full bg-[#FF6B35] text-white py-3 rounded-lg font-medium font-poppins shadow-md hover:bg-opacity-90 transition"
           >
             {loading ? 'Connexion en cours...' : 'Se connecter'}
-          </Button>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography 
-              variant="body2"
-              sx={{ 
-                fontFamily: '"Poppins", sans-serif',
-                color: alpha(textColor, 0.8)
-              }}
-            >
-              Pas encore de compte ?{' '}
-              <Link 
-                component={RouterLink} 
-                to="/register" 
-                sx={{ 
-                  color: primaryColor,
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'underline'
-                  }
-                }}
-              >
-                Inscrivez-vous
-              </Link>
-            </Typography>
-          </Box>
-        </Box>
-      </Paper>
-    </Box>
+          </button>
+        </form>
+
+        <div className="text-center mt-4 text-sm font-poppins text-gray-600">
+          Pas encore de compte ?{' '}
+          <RouterLink to="/register" className="text-[#FF6B35] hover:underline font-medium">
+            Inscrivez-vous
+          </RouterLink>
+        </div>
+      </div>
+    </div>
   );
 };
 
