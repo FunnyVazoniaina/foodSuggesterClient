@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import { Icon } from '@iconify/react';
-import { signInWithRedirect, getRedirectResult } from "firebase/auth";
+import { signInWithRedirect } from "firebase/auth";
 import { auth, provider } from "../firebase";
 
 const LoginPage: React.FC = () => {
@@ -13,40 +13,33 @@ const LoginPage: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Rediriger si déjà connecté
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     if (location.state?.message) {
       setSuccess(location.state.message);
       window.history.replaceState({}, document.title);
     }
-
-    // Vérifier s'il y a un résultat de redirection Google
-    const checkRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result) {
-          console.log("Utilisateur connecté via redirection :", result.user.displayName);
-          navigate('/');
-        }
-      } catch (error) {
-        console.error("Erreur lors de la redirection :", error);
-      }
-    };
-
-    checkRedirectResult();
-  }, [location, navigate]);
+  }, [location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return setError('Veuillez remplir tous les champs');
+    
     try {
       setLoading(true);
       setError('');
       await login(email, password);
-      navigate('/');
+      // La redirection sera gérée par l'useEffect ci-dessus
     } catch (err: any) {
       console.error(err);
       setError(err.response?.data?.message || 'Erreur de connexion');
@@ -59,8 +52,8 @@ const LoginPage: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      // Utiliser signInWithRedirect au lieu de signInWithPopup
       await signInWithRedirect(auth, provider);
+      // L'AuthContext gérera automatiquement la suite
     } catch (err: any) {
       console.error("Erreur login Google :", err);
       setError('Erreur lors de la connexion avec Google');
