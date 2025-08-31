@@ -59,89 +59,254 @@ const SearchPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-[#4A4238] flex items-center gap-2 mb-3">
-          <Icon icon="mdi:magnify" className="text-[#FF6B35]" />
-          Recherche de recettes
-        </h1>
-        <p className="text-[#4A4238]/80 mb-4">Entrez les ingrédients que vous avez pour découvrir des recettes délicieuses.</p>
-        <div className="bg-white p-4 rounded-2xl shadow mb-6">
-          <h2 className="text-lg font-semibold text-[#4A4238] mb-3">Quels ingrédients avez-vous ?</h2>
-          <div className="flex mb-3 gap-2">
-            <input 
-              value={ingredient} 
-              onChange={e => setIngredient(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleAddIngredient()}
-              placeholder="Ajouter un ingrédient"
-              className="flex-grow px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#FF6B35]"
-            />
+      <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-amber-50/30 to-yellow-50/40">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          {/* Hero Header */}
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-600 rounded-3xl mb-6 shadow-2xl">
+              <Icon icon="mdi:chef-hat" className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-orange-800 bg-clip-text text-transparent font-['Poppins'] mb-3">
+              Recherche de recettes
+            </h1>
+            <p className="text-xl text-gray-600 font-['Poppins'] max-w-2xl mx-auto leading-relaxed">
+              Découvrez des recettes délicieuses avec les ingrédients que vous avez sous la main
+            </p>
+          </div>
+
+          {/* Search Section */}
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 p-8 mb-8">
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center mr-4">
+                <Icon icon="mdi:food" className="w-6 h-6 text-orange-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 font-['Poppins']">
+                Quels ingrédients avez-vous ?
+              </h2>
+            </div>
+
+            {/* Input Section */}
+            <div className="mb-6">
+              <div className="flex gap-3 mb-4">
+                <div className="flex-grow relative">
+                  <input 
+                    value={ingredient} 
+                    onChange={e => setIngredient(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleAddIngredient()}
+                    placeholder="Tapez un ingrédient..."
+                    className="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all duration-200 text-lg font-['Poppins'] bg-white shadow-sm"
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
+                    <Icon icon="mdi:food-outline" className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
+                <button 
+                  onClick={handleAddIngredient} 
+                  disabled={!ingredient}
+                  className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-['Poppins'] font-semibold text-lg hover:scale-105 active:scale-95"
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon icon="mdi:plus" className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
+                    Ajouter
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Ingredients Display */}
+            <div className="mb-6">
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border-2 border-dashed border-orange-200 p-6 min-h-[120px] transition-all duration-300">
+                {ingredients.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-800 font-['Poppins']">
+                        Vos ingrédients ({ingredients.length})
+                      </h3>
+                      <button 
+                        onClick={() => setIngredients([])}
+                        className="text-sm text-red-500 hover:text-red-700 font-['Poppins'] flex items-center gap-1"
+                      >
+                        <Icon icon="mdi:close-circle" className="w-4 h-4" />
+                        Tout effacer
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      {ingredients.map((ing, i) => (
+                        <span 
+                          key={i} 
+                          className="group inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-orange-700 border-2 border-orange-200 shadow-sm hover:shadow-md transition-all duration-200 font-['Poppins'] font-medium"
+                        >
+                          <Icon icon="mdi:food-apple" className="w-4 h-4" />
+                          {ing}
+                          <button 
+                            onClick={() => handleRemoveIngredient(ing)} 
+                            className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center hover:bg-red-200 transition-colors ml-1"
+                          >
+                            <Icon icon="mdi:close" className="w-3 h-3 text-red-600" />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-center">
+                    <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                      <Icon icon="mdi:food-outline" className="w-8 h-8 text-orange-400" />
+                    </div>
+                    <p className="text-gray-500 font-['Poppins'] text-lg">
+                      Commencez à ajouter vos ingrédients
+                    </p>
+                    <p className="text-gray-400 font-['Poppins'] text-sm mt-1">
+                      Tapez le nom d'un ingrédient et appuyez sur Ajouter
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Search Button */}
             <button 
-              onClick={handleAddIngredient} 
-              disabled={!ingredient}
-              className="flex items-center gap-1 px-4 py-2 bg-[#FF6B35] text-white rounded-lg shadow hover:bg-[#ff5a25] disabled:bg-[#ff6b3544]"
+              onClick={handleSearch} 
+              disabled={ingredients.length === 0 || loading}
+              className="group w-full py-5 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-2xl shadow-xl text-xl font-bold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-['Poppins'] hover:scale-[1.02] active:scale-[0.98]"
             >
-              <Icon icon="mdi:plus" /> Ajouter
+              <div className="flex justify-center items-center gap-3">
+                <Icon icon="mdi:magnify" className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                {loading ? 'Recherche en cours...' : 'Rechercher des recettes'}
+                {!loading && (
+                  <Icon icon="mdi:arrow-right" className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                )}
+              </div>
             </button>
           </div>
 
-          <div className="flex flex-wrap gap-2 p-2 bg-[#FFF9EC] rounded-lg border border-dashed border-[#4A423820] min-h-[50px]">
-            {ingredients.length > 0 ? ingredients.map((ing, i) => (
-              <span 
-                key={i} 
-                className="bg-[#FF6B351A] text-[#FF6B35] px-3 py-1 rounded-full text-sm flex items-center gap-1"
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8 rounded-r-2xl shadow-sm">
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                  <Icon icon="mdi:alert-circle" className="w-6 h-6 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-red-800 font-semibold font-['Poppins'] text-lg">Erreur</h3>
+                  <p className="text-red-700 font-['Poppins']">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl p-12 text-center border border-white/20">
+              <div className="relative inline-block">
+                <div className="w-20 h-20 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full flex items-center justify-center mb-6 shadow-xl">
+                  <Icon icon="mdi:loading" className="w-10 h-10 text-white animate-spin" />
+                </div>
+                <div className="absolute -inset-3 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full opacity-20 animate-pulse"></div>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2 font-['Poppins']">
+                Recherche en cours...
+              </h3>
+              <p className="text-gray-600 font-['Poppins'] text-lg">
+                Nous trouvons les meilleures recettes pour vous
+              </p>
+            </div>
+          )}
+
+          {/* Results Section */}
+          {!loading && recipes.length > 0 && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-8">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center">
+                  <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center mr-4">
+                    <Icon icon="mdi:silverware-fork-knife" className="w-7 h-7 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-gray-800 font-['Poppins']">
+                      Résultats trouvés
+                    </h2>
+                    <p className="text-gray-600 font-['Poppins'] text-lg">
+                      {recipes.length} recette{recipes.length > 1 ? 's' : ''} disponible{recipes.length > 1 ? 's' : ''}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full font-['Poppins'] font-medium">
+                    <Icon icon="mdi:check-circle" className="w-4 h-4 mr-2" />
+                    Recherche terminée
+                  </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {recipes.map(recipe => (
+                  <div key={recipe.id} className="transform hover:scale-105 transition-transform duration-200">
+                    <RecipeCard recipe={recipe} onFavoriteToggle={handleFavoriteToggle} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* No Results State */}
+          {!loading && ingredients.length > 0 && recipes.length === 0 && !error && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-12 text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Icon icon="mdi:silverware-fork-knife" className="w-12 h-12 text-gray-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-3 font-['Poppins']">
+                Aucune recette trouvée
+              </h3>
+              <p className="text-gray-500 font-['Poppins'] text-lg max-w-md mx-auto mb-6">
+                Essayez d'ajouter d'autres ingrédients ou de modifier votre sélection pour découvrir plus de recettes.
+              </p>
+              <button 
+                onClick={() => setIngredients([])}
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl hover:shadow-lg transition-all duration-200 font-['Poppins'] font-medium"
               >
-                {ing}
-                <button onClick={() => handleRemoveIngredient(ing)} className="hover:text-red-600">
-                  <Icon icon="mdi:close-circle" className="text-[#FF6B35]" />
-                </button>
-              </span>
-            )) : (
-              <p className="italic text-[#4A4238]/60 w-full text-center">Aucun ingrédient ajouté. Commencez à ajouter vos ingrédients !</p>
-            )}
-          </div>
-
-          <button 
-            onClick={handleSearch} 
-            disabled={ingredients.length === 0 || loading}
-            className="w-full mt-4 py-3 bg-[#FF6B35] text-white rounded-lg shadow text-lg font-medium hover:bg-[#ff5a25] disabled:bg-[#ff6b3544]"
-          >
-            <div className="flex justify-center items-center gap-2">
-              <Icon icon="mdi:magnify" />
-              Rechercher des recettes
+                <Icon icon="mdi:refresh" className="w-5 h-5 mr-2" />
+                Recommencer
+              </button>
             </div>
-          </button>
+          )}
+
+          {/* Welcome State */}
+          {!loading && ingredients.length === 0 && recipes.length === 0 && !error && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/20 p-12 text-center">
+              <div className="w-32 h-32 bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
+                <Icon icon="mdi:magnify" className="w-16 h-16 text-orange-500" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-800 mb-4 font-['Poppins']">
+                Commencez votre recherche
+              </h3>
+              <p className="text-gray-600 font-['Poppins'] text-xl max-w-2xl mx-auto leading-relaxed">
+                Ajoutez vos ingrédients disponibles et nous vous proposerons des recettes adaptées à ce que vous avez
+              </p>
+              
+              {/* Quick Start Suggestions */}
+              <div className="mt-8">
+                <p className="text-gray-500 font-['Poppins'] mb-4">
+                  Suggestions populaires :
+                </p>
+                <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
+                  {commonIngredients.slice(0, 8).map((ing) => (
+                    <button
+                      key={ing}
+                      onClick={() => {
+                        if (!ingredients.includes(ing)) {
+                          setIngredients([...ingredients, ing]);
+                        }
+                      }}
+                      className="px-4 py-2 bg-orange-50 text-orange-700 rounded-full border border-orange-200 hover:bg-orange-100 hover:border-orange-300 transition-all duration-200 font-['Poppins'] text-sm hover:scale-105"
+                    >
+                      {ing}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-
-        {error && (
-          <div className="bg-red-100 border border-red-300 text-red-800 px-4 py-3 rounded-lg mb-4">
-            {error}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="text-center py-10">
-            <div className="animate-spin h-10 w-10 border-4 border-[#FF6B35] border-t-transparent rounded-full mx-auto mb-3"></div>
-            <p className="text-[#4A4238]/80">Recherche de recettes en cours...</p>
-          </div>
-        ) : recipes.length > 0 ? (
-          <div className="mt-8">
-            <h2 className="text-2xl font-semibold text-[#4A4238] flex items-center gap-2 mb-1">
-              <Icon icon="mdi:silverware-fork-knife" className="text-[#FF6B35]" /> Résultats ({recipes.length})
-            </h2>
-            <p className="text-[#4A4238]/70 mb-4">Voici les recettes que vous pouvez préparer avec vos ingrédients.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {recipes.map(recipe => (
-                <RecipeCard key={recipe.id} recipe={recipe} onFavoriteToggle={handleFavoriteToggle} />
-              ))}
-            </div>
-          </div>
-        ) : ingredients.length > 0 && !loading ? (
-          <div className="text-center py-10">
-            <Icon icon="mdi:silverware-fork-knife" className="text-5xl text-[#4A4238]/30 mb-3" />
-            <h3 className="text-xl text-[#4A4238]/70 font-medium mb-1">Aucune recette trouvée</h3>
-            <p className="text-[#4A4238]/60 max-w-md mx-auto">Essayez d'ajouter d'autres ingrédients ou de modifier votre sélection.</p>
-          </div>
-        ) : null}
       </div>
     </Layout>
   );
