@@ -3,7 +3,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
+        sans: ['Roboto', 'sans-serif'],
       },
     },
   },
