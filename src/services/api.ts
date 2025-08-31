@@ -92,7 +92,7 @@ export const historyService = {
     });
     
     if (!response.ok) {
-      const errorText = await response.text(); // Utilisez text() au lieu de json() pour voir la réponse brute
+      const errorText = await response.text(); 
       console.error('API Error Response:', errorText);
       throw new Error('Failed to fetch search history');
     }
