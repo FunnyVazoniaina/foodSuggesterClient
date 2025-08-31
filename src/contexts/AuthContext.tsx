@@ -54,7 +54,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       const idToken = await firebaseUser.getIdToken();
       
-      // Envoyer les données à votre backend
       const response = await axios.post('/api/auth/google-login', {
         idToken,
         userData: {

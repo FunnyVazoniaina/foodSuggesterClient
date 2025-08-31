@@ -3,6 +3,44 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { AuthContext } from "../contexts/AuthContext";
 
+const InputField = ({ 
+  id, label, type = "text", value, onChange, required = false, 
+  icon, endIcon, onEndIconClick, placeholder 
+}: {
+  id: string; label: string; type?: string; value: string; 
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean; icon: string; endIcon?: string;
+  onEndIconClick?: () => void; placeholder?: string;
+}) => (
+  <div className="mb-4">
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <div className="relative">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <Icon icon={icon} className="w-5 h-5 text-gray-400" />
+      </div>
+      <input
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+      />
+      {endIcon && (
+        <button
+          type="button"
+          onClick={onEndIconClick}
+          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+        >
+          <Icon icon={endIcon} className="w-5 h-5 text-gray-400 hover:text-gray-600" />
+        </button>
+      )}
+    </div>
+  </div>
+);
+
 const RegisterPage: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [name, setName] = useState("");
@@ -65,7 +103,7 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      await register(name, email, password, avatar);
+      await register(email, password, name);
       navigate("/login", {
         state: {
           message: "Inscription réussie ! Vous pouvez maintenant vous connecter.",
@@ -81,44 +119,6 @@ const RegisterPage: React.FC = () => {
       setLoading(false);
     }
   };
-
-  const InputField = ({ 
-    id, label, type = "text", value, onChange, required = false, 
-    icon, endIcon, onEndIconClick, placeholder 
-  }: {
-    id: string; label: string; type?: string; value: string; 
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean; icon: string; endIcon?: string;
-    onEndIconClick?: () => void; placeholder?: string;
-  }) => (
-    <div className="mb-4">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-        {label} {required && <span className="text-red-500">*</span>}
-      </label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon icon={icon} className="w-5 h-5 text-gray-400" />
-        </div>
-        <input
-          id={id}
-          type={type}
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
-        />
-        {endIcon && (
-          <button
-            type="button"
-            onClick={onEndIconClick}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center"
-          >
-            <Icon icon={endIcon} className="w-5 h-5 text-gray-400 hover:text-gray-600" />
-          </button>
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-orange-50 p-4 font-['Poppins',sans-serif]">
