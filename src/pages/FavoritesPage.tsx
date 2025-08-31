@@ -50,12 +50,12 @@ const FavoritesPage: React.FC = () => {
   return (
     <Layout>
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-amber-900 flex items-center mb-3 font-['Poppins']">
+        <h1 className="text-3xl font-semibold text-amber-900 flex items-center mb-3 ">
           <Icon icon="mdi:heart" className="w-8 h-8 text-red-500 mr-3" />
           Mes recettes favorites
         </h1>
         
-        <p className="text-amber-800/80 mb-4 font-['Poppins']">
+        <p className="text-amber-800/80 mb-4 ">
           Retrouvez ici toutes les recettes que vous avez ajoutées à vos favoris.
         </p>
         
@@ -74,7 +74,7 @@ const FavoritesPage: React.FC = () => {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-16">
           <Icon icon="mdi:loading" className="w-8 h-8 text-orange-600 animate-spin mb-3" />
-          <p className="text-amber-800/80 font-['Poppins']">
+          <p className="text-amber-800/80 ">
             Chargement de vos favoris...
           </p>
         </div>
@@ -91,15 +91,15 @@ const FavoritesPage: React.FC = () => {
       ) : (
         <div className="text-center py-16 px-6 bg-orange-50/50 rounded-xl border border-dashed border-amber-200">
           <Icon icon="mdi:heart-outline" className="w-16 h-16 text-red-300 mx-auto mb-4" />
-          <h3 className="text-xl font-medium text-amber-900 mb-2 font-['Poppins']">
+          <h3 className="text-xl font-medium text-amber-900 mb-2 ">
             Vous n'avez pas encore de recettes favorites
           </h3>
-          <p className="text-amber-800/70 mb-6 max-w-md mx-auto font-['Poppins']">
+          <p className="text-amber-800/70 mb-6 max-w-md mx-auto ">
             Explorez des recettes et ajoutez-les à vos favoris pour les retrouver facilement ici.
           </p>
           <button 
             onClick={() => navigate('/search')}
-            className="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium font-['Poppins'] shadow-lg hover:shadow-xl"
+            className="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium  shadow-lg hover:shadow-xl"
           >
             <Icon icon="mdi:magnify" className="w-5 h-5 mr-2" />
             Rechercher des recettes

@@ -76,10 +76,10 @@ const HistoryPage: React.FC = () => {
                 <Icon icon="mdi:history" className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-orange-800 bg-clip-text text-transparent font-['Poppins']">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-orange-800 bg-clip-text text-transparent ">
                   Historique des recherches
                 </h1>
-                <p className="text-gray-600 font-['Poppins'] text-lg mt-1">
+                <p className="text-gray-600  text-lg mt-1">
                   Retrouvez vos recherches précédentes
                 </p>
               </div>
@@ -88,7 +88,7 @@ const HistoryPage: React.FC = () => {
           
           {/* Actions Bar */}
           <div className="flex justify-between items-center mb-6">
-            <div className="text-sm text-gray-500 font-['Poppins']">
+            <div className="text-sm text-gray-500 ">
               {history.length > 0 && (
                 <span className="inline-flex items-center">
                   <Icon icon="mdi:database" className="w-4 h-4 mr-1" />
@@ -99,7 +99,7 @@ const HistoryPage: React.FC = () => {
             <button 
               onClick={handleClearHistory}
               disabled={history.length === 0 || loading}
-              className="group inline-flex items-center px-6 py-3 bg-white border-2 border-red-200 text-red-600 rounded-2xl hover:bg-red-50 hover:border-red-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-['Poppins'] font-medium shadow-sm hover:shadow-md"
+              className="group inline-flex items-center px-6 py-3 bg-white border-2 border-red-200 text-red-600 rounded-2xl hover:bg-red-50 hover:border-red-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed  font-medium shadow-sm hover:shadow-md"
             >
               <Icon icon="mdi:delete-sweep" className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
               Tout effacer
@@ -114,8 +114,8 @@ const HistoryPage: React.FC = () => {
                   <Icon icon="mdi:alert-circle" className="w-5 h-5 text-red-600" />
                 </div>
                 <div>
-                  <h3 className="text-red-800 font-semibold font-['Poppins']">Erreur</h3>
-                  <p className="text-red-700 font-['Poppins']">{error}</p>
+                  <h3 className="text-red-800 font-semibold ">Erreur</h3>
+                  <p className="text-red-700 ">{error}</p>
                 </div>
               </div>
             </div>
@@ -131,17 +131,17 @@ const HistoryPage: React.FC = () => {
                   </div>
                   <div className="absolute -inset-2 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full opacity-20 animate-pulse"></div>
                 </div>
-                <p className="text-gray-600 font-['Poppins'] text-lg">Chargement de l'historique...</p>
+                <p className="text-gray-600  text-lg">Chargement de l'historique...</p>
               </div>
             ) : history.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Icon icon="mdi:history" className="w-12 h-12 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2 font-['Poppins']">
+                <h3 className="text-xl font-semibold text-gray-700 mb-2 ">
                   Aucun historique disponible
                 </h3>
-                <p className="text-gray-500 font-['Poppins']">
+                <p className="text-gray-500 ">
                   Vos recherches d'ingrédients apparaîtront ici
                 </p>
               </div>
@@ -159,12 +159,12 @@ const HistoryPage: React.FC = () => {
                           <Icon icon="mdi:food" className="w-6 h-6 text-orange-600" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900 font-['Poppins'] text-lg mb-1 group-hover:text-orange-700 transition-colors">
+                          <h3 className="font-semibold text-gray-900  text-lg mb-1 group-hover:text-orange-700 transition-colors">
                             {item.ingredients}
                           </h3>
                           <div className="flex items-center text-sm text-gray-500">
                             <Icon icon="mdi:clock-outline" className="w-4 h-4 mr-1" />
-                            <span className="font-['Poppins']">
+                            <span className="">
                               {formatDate(item.searched_at)}
                             </span>
                           </div>
@@ -203,7 +203,7 @@ const HistoryPage: React.FC = () => {
           {/* Footer hint */}
           {history.length > 0 && (
             <div className="text-center mt-6">
-              <p className="text-gray-400 text-sm font-['Poppins'] flex items-center justify-center">
+              <p className="text-gray-400 text-sm  flex items-center justify-center">
                 <Icon icon="mdi:information-outline" className="w-4 h-4 mr-1" />
                 Cliquez sur une recherche pour la relancer
               </p>

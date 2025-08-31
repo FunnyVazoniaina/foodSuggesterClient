@@ -66,10 +66,10 @@ const SearchPage: React.FC = () => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-orange-500 to-amber-600 rounded-3xl mb-6 shadow-2xl">
               <Icon icon="mdi:chef-hat" className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-orange-800 bg-clip-text text-transparent font-['Poppins'] mb-3">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-700 via-amber-700 to-orange-800 bg-clip-text text-transparent mb-3">
               Recherche de recettes
             </h1>
-            <p className="text-xl text-gray-600 font-['Poppins'] max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               Découvrez des recettes délicieuses avec les ingrédients que vous avez sous la main
             </p>
           </div>
@@ -80,7 +80,7 @@ const SearchPage: React.FC = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center mr-4">
                 <Icon icon="mdi:food" className="w-6 h-6 text-orange-600" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 font-['Poppins']">
+              <h2 className="text-2xl font-bold text-gray-800 ">
                 Quels ingrédients avez-vous ?
               </h2>
             </div>
@@ -94,7 +94,7 @@ const SearchPage: React.FC = () => {
                     onChange={e => setIngredient(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleAddIngredient()}
                     placeholder="Tapez un ingrédient..."
-                    className="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all duration-200 text-lg font-['Poppins'] bg-white shadow-sm"
+                    className="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 focus:outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-100 transition-all duration-200 text-lg  bg-white shadow-sm"
                   />
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                     <Icon icon="mdi:food-outline" className="w-5 h-5 text-gray-400" />
@@ -103,7 +103,7 @@ const SearchPage: React.FC = () => {
                 <button 
                   onClick={handleAddIngredient} 
                   disabled={!ingredient}
-                  className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 font-['Poppins'] font-semibold text-lg hover:scale-105 active:scale-95"
+                  className="group px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200  font-semibold text-lg hover:scale-105 active:scale-95"
                 >
                   <div className="flex items-center gap-2">
                     <Icon icon="mdi:plus" className="w-5 h-5 group-hover:rotate-90 transition-transform duration-200" />
@@ -119,12 +119,12 @@ const SearchPage: React.FC = () => {
                 {ingredients.length > 0 ? (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-800 font-['Poppins']">
+                      <h3 className="text-lg font-semibold text-gray-800">
                         Vos ingrédients ({ingredients.length})
                       </h3>
                       <button 
                         onClick={() => setIngredients([])}
-                        className="text-sm text-red-500 hover:text-red-700 font-['Poppins'] flex items-center gap-1"
+                        className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1"
                       >
                         <Icon icon="mdi:close-circle" className="w-4 h-4" />
                         Tout effacer
@@ -134,7 +134,7 @@ const SearchPage: React.FC = () => {
                       {ingredients.map((ing, i) => (
                         <span 
                           key={i} 
-                          className="group inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-orange-700 border-2 border-orange-200 shadow-sm hover:shadow-md transition-all duration-200 font-['Poppins'] font-medium"
+                          className="group inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full text-orange-700 border-2 border-orange-200 shadow-sm hover:shadow-md transition-all duration-200  font-medium"
                         >
                           <Icon icon="mdi:food-apple" className="w-4 h-4" />
                           {ing}
@@ -153,10 +153,10 @@ const SearchPage: React.FC = () => {
                     <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4">
                       <Icon icon="mdi:food-outline" className="w-8 h-8 text-orange-400" />
                     </div>
-                    <p className="text-gray-500 font-['Poppins'] text-lg">
+                    <p className="text-gray-500 text-lg">
                       Commencez à ajouter vos ingrédients
                     </p>
-                    <p className="text-gray-400 font-['Poppins'] text-sm mt-1">
+                    <p className="text-gray-400 text-sm mt-1">
                       Tapez le nom d'un ingrédient et appuyez sur Ajouter
                     </p>
                   </div>
@@ -168,7 +168,7 @@ const SearchPage: React.FC = () => {
             <button 
               onClick={handleSearch} 
               disabled={ingredients.length === 0 || loading}
-              className="group w-full py-5 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-2xl shadow-xl text-xl font-bold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-['Poppins'] hover:scale-[1.02] active:scale-[0.98]"
+              className="group w-full py-5 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-2xl shadow-xl text-xl font-bold hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
             >
               <div className="flex justify-center items-center gap-3">
                 <Icon icon="mdi:magnify" className="w-6 h-6 group-hover:scale-110 transition-transform" />
@@ -188,8 +188,8 @@ const SearchPage: React.FC = () => {
                   <Icon icon="mdi:alert-circle" className="w-6 h-6 text-red-600" />
                 </div>
                 <div>
-                  <h3 className="text-red-800 font-semibold font-['Poppins'] text-lg">Erreur</h3>
-                  <p className="text-red-700 font-['Poppins']">{error}</p>
+                  <h3 className="text-red-800 font-semibold text-lg">Erreur</h3>
+                  <p className="text-red-700">{error}</p>
                 </div>
               </div>
             </div>
@@ -204,10 +204,10 @@ const SearchPage: React.FC = () => {
                 </div>
                 <div className="absolute -inset-3 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full opacity-20 animate-pulse"></div>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2 font-['Poppins']">
+              <h3 className="text-2xl font-bold text-gray-800 mb-2 ">
                 Recherche en cours...
               </h3>
-              <p className="text-gray-600 font-['Poppins'] text-lg">
+              <p className="text-gray-600  text-lg">
                 Nous trouvons les meilleures recettes pour vous
               </p>
             </div>
@@ -222,16 +222,16 @@ const SearchPage: React.FC = () => {
                     <Icon icon="mdi:silverware-fork-knife" className="w-7 h-7 text-green-600" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-800 font-['Poppins']">
+                    <h2 className="text-3xl font-bold text-gray-800 ">
                       Résultats trouvés
                     </h2>
-                    <p className="text-gray-600 font-['Poppins'] text-lg">
+                    <p className="text-gray-600  text-lg">
                       {recipes.length} recette{recipes.length > 1 ? 's' : ''} disponible{recipes.length > 1 ? 's' : ''}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full font-['Poppins'] font-medium">
+                  <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full  font-medium">
                     <Icon icon="mdi:check-circle" className="w-4 h-4 mr-2" />
                     Recherche terminée
                   </div>
@@ -254,15 +254,15 @@ const SearchPage: React.FC = () => {
               <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Icon icon="mdi:silverware-fork-knife" className="w-12 h-12 text-gray-400" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-700 mb-3 font-['Poppins']">
+              <h3 className="text-2xl font-bold text-gray-700 mb-3 ">
                 Aucune recette trouvée
               </h3>
-              <p className="text-gray-500 font-['Poppins'] text-lg max-w-md mx-auto mb-6">
+              <p className="text-gray-500  text-lg max-w-md mx-auto mb-6">
                 Essayez d'ajouter d'autres ingrédients ou de modifier votre sélection pour découvrir plus de recettes.
               </p>
               <button 
                 onClick={() => setIngredients([])}
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl hover:shadow-lg transition-all duration-200 font-['Poppins'] font-medium"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-2xl hover:shadow-lg transition-all duration-200  font-medium"
               >
                 <Icon icon="mdi:refresh" className="w-5 h-5 mr-2" />
                 Recommencer
@@ -276,16 +276,16 @@ const SearchPage: React.FC = () => {
               <div className="w-32 h-32 bg-gradient-to-br from-orange-100 via-amber-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
                 <Icon icon="mdi:magnify" className="w-16 h-16 text-orange-500" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-800 mb-4 font-['Poppins']">
+              <h3 className="text-3xl font-bold text-gray-800 mb-4 ">
                 Commencez votre recherche
               </h3>
-              <p className="text-gray-600 font-['Poppins'] text-xl max-w-2xl mx-auto leading-relaxed">
+              <p className="text-gray-600  text-xl max-w-2xl mx-auto leading-relaxed">
                 Ajoutez vos ingrédients disponibles et nous vous proposerons des recettes adaptées à ce que vous avez
               </p>
               
               {/* Quick Start Suggestions */}
               <div className="mt-8">
-                <p className="text-gray-500 font-['Poppins'] mb-4">
+                <p className="text-gray-500  mb-4">
                   Suggestions populaires :
                 </p>
                 <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
@@ -297,7 +297,7 @@ const SearchPage: React.FC = () => {
                           setIngredients([...ingredients, ing]);
                         }
                       }}
-                      className="px-4 py-2 bg-orange-50 text-orange-700 rounded-full border border-orange-200 hover:bg-orange-100 hover:border-orange-300 transition-all duration-200 font-['Poppins'] text-sm hover:scale-105"
+                      className="px-4 py-2 bg-orange-50 text-orange-700 rounded-full border border-orange-200 hover:bg-orange-100 hover:border-orange-300 transition-all duration-200  text-sm hover:scale-105"
                     >
                       {ing}
                     </button>
