@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   // Configuration de l'URL de base pour axios
-  axios.defaults.baseURL = 'http://localhost:3000'; // Ajustez selon votre port backend
+  axios.defaults.baseURL = 'http://localhost:5000'; // Ajustez selon votre port backend
 
   // Configuration axios avec token
   const setupAxiosInterceptors = (token: string) => {
