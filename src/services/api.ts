@@ -80,60 +80,23 @@ export const recipeService = {
 };
 
 export const historyService = {
- 
+  
   getSearchHistory: async () => {
-    // Utilisez l'URL complète au lieu de '/api/recipes/history'
-    const response = await fetch('http://localhost:5000/api/recipes/history', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorText = await response.text(); 
-      console.error('API Error Response:', errorText);
-      throw new Error('Failed to fetch search history');
-    }
-    
-    return response.json();
+    const response = await api.get('/recipes/history');
+    return response.data;
   },
-  
+
   deleteHistoryItem: async (historyId: number) => {
-    const response = await fetch(`/api/recipes/history/${historyId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to delete history item');
-    }
-    
-    return response.json();
+    const response = await api.delete(`/recipes/history/${historyId}`);
+    return response.data;
   },
-  
+
   clearHistory: async () => {
-    const response = await fetch('/api/recipes/history', {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to clear history');
-    }
-    
-    return response.json();
+    const response = await api.delete('/recipes/history');
+    return response.data;
   }
 };
+
 
 export const userService = {
   
