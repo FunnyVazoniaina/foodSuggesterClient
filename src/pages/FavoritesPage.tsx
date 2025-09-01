@@ -9,7 +9,13 @@ interface Recipe {
   id: number;
   title: string;
   image: string;
-  isFavorite: boolean;
+  usedIngredientCount: number;
+  missedIngredientCount: number;
+  likes?: number;
+  isFavorite?: boolean;
+  sourceUrl?: string;
+  steps?: any[];
+  // Ajoute les autres propriétés si nécessaires
 }
 
 const FavoritesPage: React.FC = () => {
@@ -26,9 +32,12 @@ const FavoritesPage: React.FC = () => {
         id: fav.id,
         title: fav.title,
         image: fav.image_url,
-        usedIngredientCount: 0,
-        missedIngredientCount: 0,
-        isFavorite: true
+        usedIngredientCount: fav.usedIngredientCount ?? 0,
+        missedIngredientCount: fav.missedIngredientCount ?? 0,
+        likes: fav.likes,
+        isFavorite: true,
+        sourceUrl: fav.sourceUrl,
+        steps: fav.steps,
       }));
       setFavorites(formattedFavorites);
     } catch (err) {
