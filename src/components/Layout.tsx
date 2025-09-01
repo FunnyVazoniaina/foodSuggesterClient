@@ -17,7 +17,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
     setShowLogoutConfirm(false);
   };
 
@@ -25,7 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     if (isAuthenticated) {
       setShowLogoutConfirm(true);
     } else {
-      navigate('/login');
+      navigate('/');
     }
   };
 

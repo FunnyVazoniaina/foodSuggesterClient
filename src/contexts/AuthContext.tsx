@@ -180,12 +180,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Nettoyer le stockage local
       localStorage.removeItem('token');
+      window.location.href = '/'; 
       delete axios.defaults.headers.common['Authorization'];
       
       setUser(null);
       setIsAuthenticated(false);
-      
-      console.log('Déconnexion réussie');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
     }
