@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const menuItems = [
-    { text: 'Accueil', icon: 'mdi:home', path: '/' },
+    { text: 'Accueil', icon: 'mdi:home', path: '/home' },
     { text: 'Recherche', icon: 'mdi:silverware-fork-knife', path: '/search' },
     { text: 'Historique', icon: 'mdi:history', path: '/history' },
     { text: 'Favoris', icon: 'mdi:heart', path: '/favorites' },
