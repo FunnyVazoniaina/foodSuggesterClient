@@ -1,23 +1,13 @@
-# Utilise Node 22 Alpine
-FROM node:22-alpine
+FROM node:22-bullseye
 
-# Crée le dossier de travail
 WORKDIR /app
 
-# Installe les dépendances système utiles
-RUN apk add --no-cache bash git
-
-# Copie package.json et package-lock.json
 COPY package*.json ./
 
-# Installe les dépendances
-RUN npm ci
+RUN npm install
 
-# Copie le reste du code
 COPY . .
 
-# Expose le port du dev server (Vite ou CRA)
 EXPOSE 5173
 
-# Commande pour lancer le dev server
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev", "--", "--host"]
