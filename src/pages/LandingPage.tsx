@@ -112,7 +112,9 @@ const LandingPage = () => {
                     Commencer gratuitement
                   </span>
                 </button>
-                <button className="group border-2 border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300">
+                <button className="group border-2 border-[#FF6B35] text-[#FF6B35] hover:bg-[#FF6B35] hover:text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300"
+                onClick={() => window.open('https://www.youtube.com/watch?v=mr5f24gEuG0', '_blank')}
+                >
                   <span className="flex items-center justify-center gap-3">
                     <Icon icon="mdi:play-circle" className="w-6 h-6" />
                     Voir la démo
