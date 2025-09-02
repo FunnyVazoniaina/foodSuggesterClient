@@ -185,9 +185,9 @@ const ProfilePage: React.FC = () => {
                     
                     <button
                       onClick={() => setPasswordChangeOpen(true)}
-                      className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-poppins text-lg group"
+                      className="w-full py-4 bg-white border-2 border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 font-semibold rounded-2xl transition-all duration-300 font-poppins text-lg group shadow-sm hover:shadow-md"
                     >
-                      <Icon icon="mdi:key-change" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
+                      <Icon icon="mdi:shield-key" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
                       Changer le mot de passe
                     </button>
                   </div>
