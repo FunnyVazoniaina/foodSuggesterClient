@@ -19,11 +19,14 @@ const ProfilePage: React.FC = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [updateError, setUpdateError] = useState('');
   const [updateSuccess, setUpdateSuccess] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [passwordChangeOpen, setPasswordChangeOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [showPasswords, setShowPasswords] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -42,20 +45,44 @@ const ProfilePage: React.FC = () => {
 
   const handleUpdate = async () => {
     setUpdateError('');
-    if (password && password !== confirmPassword) return setUpdateError('Les mots de passe ne correspondent pas');
     const updateData: any = {};
     if (name !== user?.name) updateData.name = name;
     if (email !== user?.email) updateData.email = email;
-    if (password) updateData.password = password;
     if (!Object.keys(updateData).length) return setUpdateError("Aucune modification");
 
     try {
       await api.put('/user/profile', updateData);
       setUser(prev => prev ? { ...prev, ...updateData } : null);
       setUpdateSuccess("Profil mis à jour");
-      setTimeout(password ? logout : () => setEditOpen(false), 2000);
+      setTimeout(() => setEditOpen(false), 2000);
     } catch {
       setUpdateError("Erreur lors de la mise à jour");
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    setPasswordError('');
+    if (!currentPassword || !newPassword) {
+      return setPasswordError('Veuillez remplir tous les champs');
+    }
+    if (newPassword.length < 6) {
+      return setPasswordError('Le nouveau mot de passe doit contenir au moins 6 caractères');
+    }
+
+    try {
+      await api.put('/user/change-password', {
+        currentPassword,
+        newPassword
+      });
+      setPasswordSuccess("Mot de passe modifié avec succès");
+      setCurrentPassword('');
+      setNewPassword('');
+      setTimeout(() => {
+        setPasswordChangeOpen(false);
+        logout(); // Déconnexion après changement de mot de passe
+      }, 2000);
+    } catch {
+      setPasswordError("Erreur lors du changement de mot de passe");
     }
   };
 
@@ -146,14 +173,24 @@ const ProfilePage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Action Button */}
-                  <button
-                    onClick={() => setEditOpen(true)}
-                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-poppins text-lg group"
-                  >
-                    <Icon icon="mdi:account-edit" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
-                    Modifier mon profil
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="space-y-4 mb-8">
+                    <button
+                      onClick={() => setEditOpen(true)}
+                      className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-poppins text-lg group"
+                    >
+                      <Icon icon="mdi:account-edit" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
+                      Modifier mon profil
+                    </button>
+                    
+                    <button
+                      onClick={() => setPasswordChangeOpen(true)}
+                      className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-poppins text-lg group"
+                    >
+                      <Icon icon="mdi:key-change" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
+                      Changer le mot de passe
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -227,43 +264,6 @@ const ProfilePage: React.FC = () => {
                         placeholder="Email"
                       />
                     </div>
-
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                        <Icon icon="mdi:lock" className="text-gray-400 text-lg" />
-                      </div>
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
-                        placeholder="Nouveau mot de passe"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                      >
-                        <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-gray-400 text-lg" />
-                      </button>
-                    </div>
-
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
-                        <Icon icon="mdi:lock-check" className="text-gray-400 text-lg" />
-                      </div>
-                      <input
-                        type={showPassword ? 'text' : 'password'}
-                        value={confirmPassword}
-                        onChange={e => setConfirmPassword(e.target.value)}
-                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:outline-none font-poppins transition-all duration-200 bg-gray-50 focus:bg-white ${
-                          password !== confirmPassword && confirmPassword 
-                            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100' 
-                            : 'border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-100'
-                        }`}
-                        placeholder="Confirmer le mot de passe"
-                      />
-                    </div>
                   </div>
 
                   <div className="mt-8 flex gap-3">
@@ -278,6 +278,101 @@ const ProfilePage: React.FC = () => {
                       className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-poppins font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
                     >
                       Enregistrer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Password Change Modal */}
+          {passwordChangeOpen && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 rounded-t-3xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mr-3">
+                        <Icon icon="mdi:key-change" className="text-white text-xl" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white font-poppins">Changer le mot de passe</h3>
+                    </div>
+                    <button
+                      onClick={() => setPasswordChangeOpen(false)}
+                      className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center hover:bg-white/30 transition-colors"
+                    >
+                      <Icon icon="mdi:close" className="text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Modal Body */}
+                <div className="p-6">
+                  {passwordError && (
+                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                      <div className="flex items-center">
+                        <Icon icon="mdi:alert-circle" className="text-red-500 mr-3 text-lg flex-shrink-0" />
+                        <p className="text-red-700 font-poppins text-sm">{passwordError}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {passwordSuccess && (
+                    <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-2xl">
+                      <div className="flex items-center">
+                        <Icon icon="mdi:check-circle" className="text-green-500 mr-3 text-lg flex-shrink-0" />
+                        <p className="text-green-700 font-poppins text-sm">{passwordSuccess}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:lock" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type={showPasswords ? 'text' : 'password'}
+                        value={currentPassword}
+                        onChange={e => setCurrentPassword(e.target.value)}
+                        className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Mot de passe actuel"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords(!showPasswords)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        <Icon icon={showPasswords ? 'mdi:eye-off' : 'mdi:eye'} className="text-gray-400 text-lg" />
+                      </button>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:lock-plus" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type={showPasswords ? 'text' : 'password'}
+                        value={newPassword}
+                        onChange={e => setNewPassword(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Nouveau mot de passe"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex gap-3">
+                    <button
+                      onClick={() => setPasswordChangeOpen(false)}
+                      className="flex-1 px-6 py-4 text-gray-700 font-poppins font-semibold hover:bg-gray-50 rounded-2xl border-2 border-gray-200 transition-all duration-200 hover:border-gray-300"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={handlePasswordChange}
+                      className="flex-1 px-6 py-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-poppins font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      Confirmer
                     </button>
                   </div>
                 </div>
