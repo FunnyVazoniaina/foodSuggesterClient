@@ -63,110 +63,228 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="mb-6">
-        <p className="text-gray-700 font-poppins mb-4">Gérez vos informations personnelles.</p>
-        <hr className="mb-6" />
-        {error && <div className="text-red-600 mb-4">{error}</div>}
-        {loading ? (
-          <div className="flex flex-col items-center justify-center my-12">
-            <div className="w-6 h-6 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-            <p className="text-gray-700 font-poppins">Chargement de votre profil...</p>
-          </div>
-        ) : user ? (
-          <div className="max-w-xl mx-auto bg-white shadow-md rounded-2xl p-6">
-            <div className="flex flex-col items-center mb-4">
-              <div className="w-24 h-24 rounded-full bg-orange-500 flex items-center justify-center text-white text-3xl shadow-md mb-2">
-                {user.name?.[0].toUpperCase()}
-              </div>
-              <h2 className="text-xl font-semibold text-brown-800 font-poppins">{user.name}</h2>
-              <p className="flex items-center text-sm text-gray-600 mt-1 font-poppins">
-                <Icon icon="mdi:calendar" className="mr-1 text-gray-400 text-base" /> Membre depuis {formatDate(user.created_at)}
-              </p>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full mb-4 shadow-lg">
+              <Icon icon="mdi:account-circle" className="text-white text-2xl" />
             </div>
-            <hr className="my-4" />
-            <div className="mb-4">
-              <p className="flex items-center text-sm text-gray-600 font-poppins">
-                <Icon icon="mdi:email" className="mr-2 text-orange-500 text-base" /> Email
-              </p>
-              <p className="text-brown-900 font-poppins mt-1">{user.email}</p>
-            </div>
-            <button
-              onClick={() => setEditOpen(true)}
-              className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl shadow-md font-poppins"
-            >
-              <Icon icon="mdi:account-edit" className="mr-2 inline-block" /> Modifier mon profil
-            </button>
+            <h1 className="text-3xl font-bold text-brown-800 font-poppins mb-2">Mon Profil</h1>
+            <p className="text-gray-600 font-poppins max-w-md mx-auto">
+              Gérez vos informations personnelles et paramètres de compte en toute sécurité.
+            </p>
           </div>
-        ) : null}
 
-        {editOpen && (
-          <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold text-brown-800 mb-4 font-poppins">Modifier mon profil</h3>
-              {updateError && <div className="text-red-600 text-sm mb-2">{updateError}</div>}
-              {updateSuccess && <div className="text-green-600 text-sm mb-2">{updateSuccess}</div>}
-              <div className="space-y-3">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-poppins pl-10"
-                    placeholder="Nom"
-                  />
-                  <Icon icon="mdi:account" className="absolute left-3 top-2.5 text-gray-400" />
+          {error && (
+            <div className="max-w-md mx-auto mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl">
+              <div className="flex items-center">
+                <Icon icon="mdi:alert-circle" className="text-red-500 mr-3 text-xl flex-shrink-0" />
+                <p className="text-red-700 font-poppins text-sm">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="relative">
+                <div className="w-16 h-16 border-4 border-orange-100 rounded-full"></div>
+                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+              <p className="text-gray-600 font-poppins mt-4 text-lg">Chargement de votre profil...</p>
+            </div>
+          ) : user ? (
+            <div className="max-w-2xl mx-auto">
+              {/* Profile Card */}
+              <div className="bg-white/80 backdrop-blur-sm shadow-xl rounded-3xl border border-white/20 overflow-hidden">
+                {/* Cover Section */}
+                <div className="h-32 bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 relative">
+                  <div className="absolute inset-0 bg-black/10"></div>
+                  <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white text-3xl font-bold shadow-xl border-4 border-white">
+                      {user.name?.[0].toUpperCase()}
+                    </div>
+                  </div>
                 </div>
-                <div className="relative">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-poppins pl-10"
-                    placeholder="Email"
-                  />
-                  <Icon icon="mdi:email" className="absolute left-3 top-2.5 text-gray-400" />
-                </div>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 font-poppins pl-10 pr-10"
-                    placeholder="Nouveau mot de passe"
-                  />
-                  <Icon icon="mdi:lock" className="absolute left-3 top-2.5 text-gray-400" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-2.5">
-                    <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-gray-400" />
+
+                {/* Profile Info */}
+                <div className="pt-16 pb-8 px-8">
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-bold text-brown-800 font-poppins mb-2">{user.name}</h2>
+                    <div className="inline-flex items-center bg-orange-50 px-4 py-2 rounded-full">
+                      <Icon icon="mdi:calendar" className="mr-2 text-orange-500 text-lg" />
+                      <span className="text-sm text-orange-700 font-poppins font-medium">
+                        Membre depuis {formatDate(user.created_at)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Info Cards */}
+                  <div className="space-y-4 mb-8">
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-6 border border-orange-100">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mr-4 shadow-sm">
+                          <Icon icon="mdi:email" className="text-white text-xl" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-orange-700 font-poppins mb-1">Adresse email</p>
+                          <p className="text-brown-900 font-poppins text-lg">{user.email}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 border border-amber-100">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center mr-4 shadow-sm">
+                          <Icon icon="mdi:account" className="text-white text-xl" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-amber-700 font-poppins mb-1">Nom d'utilisateur</p>
+                          <p className="text-brown-900 font-poppins text-lg">{user.name}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button
+                    onClick={() => setEditOpen(true)}
+                    className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 font-poppins text-lg group"
+                  >
+                    <Icon icon="mdi:account-edit" className="mr-3 inline-block text-xl group-hover:scale-110 transition-transform" />
+                    Modifier mon profil
                   </button>
                 </div>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    className={`w-full px-4 py-2 border rounded-xl focus:outline-none font-poppins pl-10 ${password !== confirmPassword && confirmPassword ? 'border-red-500' : 'focus:ring-2 focus:ring-orange-500'}`}
-                    placeholder="Confirmer le mot de passe"
-                  />
-                  <Icon icon="mdi:lock" className="absolute left-3 top-2.5 text-gray-400" />
-                </div>
-              </div>
-              <div className="mt-4 flex justify-end gap-3">
-                <button
-                  onClick={() => setEditOpen(false)}
-                  className="px-4 py-2 text-gray-600 font-poppins hover:bg-gray-100 rounded-xl"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={handleUpdate}
-                  className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-poppins rounded-xl shadow"
-                >
-                  Enregistrer
-                </button>
               </div>
             </div>
-          </div>
-        )}
+          ) : null}
+
+          {/* Edit Modal */}
+          {editOpen && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+                {/* Modal Header */}
+                <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-6 rounded-t-3xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center mr-3">
+                        <Icon icon="mdi:account-edit" className="text-white text-xl" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white font-poppins">Modifier mon profil</h3>
+                    </div>
+                    <button
+                      onClick={() => setEditOpen(false)}
+                      className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center hover:bg-white/30 transition-colors"
+                    >
+                      <Icon icon="mdi:close" className="text-white" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Modal Body */}
+                <div className="p-6">
+                  {updateError && (
+                    <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                      <div className="flex items-center">
+                        <Icon icon="mdi:alert-circle" className="text-red-500 mr-3 text-lg flex-shrink-0" />
+                        <p className="text-red-700 font-poppins text-sm">{updateError}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {updateSuccess && (
+                    <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-2xl">
+                      <div className="flex items-center">
+                        <Icon icon="mdi:check-circle" className="text-green-500 mr-3 text-lg flex-shrink-0" />
+                        <p className="text-green-700 font-poppins text-sm">{updateSuccess}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:account" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Nom"
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:email" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Email"
+                      />
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:lock" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-100 font-poppins transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Nouveau mot de passe"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                      >
+                        <Icon icon={showPassword ? 'mdi:eye-off' : 'mdi:eye'} className="text-gray-400 text-lg" />
+                      </button>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <Icon icon="mdi:lock-check" className="text-gray-400 text-lg" />
+                      </div>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        className={`w-full pl-12 pr-4 py-4 border-2 rounded-2xl focus:outline-none font-poppins transition-all duration-200 bg-gray-50 focus:bg-white ${
+                          password !== confirmPassword && confirmPassword 
+                            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100' 
+                            : 'border-gray-200 focus:border-orange-500 focus:ring-4 focus:ring-orange-100'
+                        }`}
+                        placeholder="Confirmer le mot de passe"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex gap-3">
+                    <button
+                      onClick={() => setEditOpen(false)}
+                      className="flex-1 px-6 py-4 text-gray-700 font-poppins font-semibold hover:bg-gray-50 rounded-2xl border-2 border-gray-200 transition-all duration-200 hover:border-gray-300"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={handleUpdate}
+                      className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-poppins font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );
